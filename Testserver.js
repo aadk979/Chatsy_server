@@ -16,7 +16,7 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     setInterval(()=>{
-    	io.emit("message", ({sender: "User 1". , message: "did yo get the message nigger"}) )    
+    	io.emit("message", ({sender: "User 1" , message: "did yo get the message nigger"}) )    
     },1000);
 });
 
