@@ -16,7 +16,10 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
     socket.on("message" , (data)=>{
-        io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  })
+        io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  });
+    socket.on("newuser" , data =>{
+        io.emit("newuser", data);
+    })
 });
 
 const PORT = process.env.PORT || 5500;
