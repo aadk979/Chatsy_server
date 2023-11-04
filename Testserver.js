@@ -15,8 +15,8 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-    
-    	io.emit("message", ({sender: "User 1" , message: "did yo get the message nigger"}) )    
+    socket.on("message" , (data)=>{
+        io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  })
 });
 
 const PORT = process.env.PORT || 5500;
