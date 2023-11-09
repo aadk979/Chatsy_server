@@ -15,6 +15,9 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
+    socket.on("enckey",(data)=>{
+        io.emit("enckey", ({user: data.user , key: data.key}));
+    });
     socket.on("message" , (data)=>{
         io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  });
     socket.on("newuser" , (data) =>{
