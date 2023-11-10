@@ -17,7 +17,7 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
     const Sid = socket.id;
     socket.on("enckey/sid",(data)=>{
-        io.emit("enckey", ({user: data.user , key: data.key , sid: data.sid }));
+        io.emit("enckey/sid", ({user: data.user , key: data.key , sid: data.sid }));
     });
     socket.on("message" , (data)=>{
         io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  });
