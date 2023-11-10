@@ -22,6 +22,7 @@ io.on("connection", (socket) => {
         io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  });
     socket.on("newuser" , (data) =>{
         io.emit("newuser", data);
+        io.emit("socektID", ({to: data , Sid: socket.id}));
     });
 });
 
