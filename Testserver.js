@@ -15,6 +15,7 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
+    const Sid = socket.id;
     socket.on("enckey",(data)=>{
         io.emit("enckey", ({user: data.user , key: data.key}));
     });
@@ -22,7 +23,7 @@ io.on("connection", (socket) => {
         io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  });
     socket.on("newuser" , (data) =>{
         io.emit("newuser", data);
-        io.emit("socektID", ({to: data , Sid: socket.id}));
+        io.emit("socektID", ({to: data , Sid: Sid}));
     });
 });
 
