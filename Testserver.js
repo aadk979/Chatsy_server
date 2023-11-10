@@ -22,12 +22,10 @@ io.on("connection", (socket) => {
         io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  });
     socket.on("newuser" , (data) =>{
         io.emit("newuser", data);
-        const Sid = socket.id;
-        io.emit("socektID", ({to: data , Sid: Sid}));
+        io.emit("socektID", ({to: data , Sid: socket.id}));
     });
     socket.on("disconnect",  ()=>{
-        const Sid = socket.id;
-        io.emit("disc" , ({sid: Sid}));
+        io.emit("disc" , ({sid: socket.id}));
     });
 });
 
