@@ -5,7 +5,14 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 let username;
 const systemstorage = {};
+const server = http.createServer(app);
 
+const io = new Server(server, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"]
+    }
+});
 function savetosystemstorage(key, data1, data2, data3) {
   dataStore[key] = { data1, data2, data3 };
 }
