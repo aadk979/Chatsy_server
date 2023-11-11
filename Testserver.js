@@ -24,15 +24,12 @@ function retrievefromsystemstorage(key) {
 
 io.on("connection", (socket) => {
     socket.on("enckey",(data)=>{
-        io.emit("enckey/sid", ({user: data.user , key: data.key , uc: data.uc }));
+        io.emit("enckey", ({user: data.user , key: data.key }));
     });
     socket.on("message" , (data)=>{
         io.emit("message" , ({message:data.message,time:data.time,to:data.to,from:data.from}))  });
     socket.on("newuser" , (data) =>{
         io.emit("newuser", data);
-    });
-    socket.on("disconnect",  ()=>{
-        io.emit("disc" , ({sid: socket.id}));
     });
     socket.on("id" ,  (data)=>{
         io.emit("id" , ({user: data.user ,uic: data.uic}));
