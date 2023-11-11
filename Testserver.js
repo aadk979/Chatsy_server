@@ -13,8 +13,8 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
-function savetosystemstorage(key, data1, data2, data3) {
-  systemstorage[key] = { data1, data2, data3 };
+function savetosystemstorage(key, data1, data2) {
+  systemstorage[key] = { name:data1, uic:data2};
 }
 
 // Function to retrieve data
@@ -35,6 +35,11 @@ io.on("connection", (socket) => {
         io.emit("id" , ({user: data.user ,uic: data.uic}));
         savetosystemstorage(socket.id , data.user ,data.uic);
         console.log(retrievefromsystemstorage(socket.id));
+    })
+    socket.on("disconnect" , ()=>{
+      const dat = retrievefromsystemstorage(socket.id);
+      io.emit("disc" , ({uic: dat.uic}));
+      
     })
 });
 
