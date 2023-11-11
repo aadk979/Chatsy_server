@@ -14,12 +14,12 @@ const io = new Server(server, {
     }
 });
 function savetosystemstorage(key, data1, data2, data3) {
-  dataStore[key] = { data1, data2, data3 };
+  systemstorage[key] = { data1, data2, data3 };
 }
 
 // Function to retrieve data
 function retrievefromsystemstorage(key) {
-  return dataStore[key];
+  return systemstorage[key];
 }
 
 io.on("connection", (socket) => {
