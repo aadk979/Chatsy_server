@@ -13,6 +13,23 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
+
+function generateUniqueCode() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
+
+  for (let i = 0; i < 15; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+
+    // Add a dash every 5 characters except for the last one
+    if ((i + 1) % 5 === 0 && i !== 14) {
+      code += '-';
+    }
+  }
+
+  return code;
+}
+
 function savetosystemstorage(key, data1, data2) {
   systemstorage[key] = { name:data1, uic:data2};
 }
@@ -23,6 +40,10 @@ function retrievefromsystemstorage(key) {
 }
 
 io.on("connection", (socket) => {
+  	socket.on("redirect-request" , (data)=>{
+      const code = generateUniqueCode();
+      io.emit(data,{link:"https://fearfulnoxiouslegacy.development98979.repl.co/" , uic: code});
+    })
     socket.on("enckey",(data)=>{
         io.emit("enckey", ({user: data.user , key: data.key }));
     });
