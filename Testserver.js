@@ -4,7 +4,6 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 let username;
-let systemstorage = {};
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -30,13 +29,22 @@ function generateUniqueCode() {
   return code;
 }
 
+let systemstorage = {};
+
+// Function to save data to system storage
 function savetosystemstorage(key, data1, data2) {
-  systemstorage[key] = { name:data1, uic:data2};
+  systemstorage[key] = { name: data1, uic: data2 };
 }
 
-// Function to retrieve data
-function retrievefromsystemstorage(key) {
-  return systemstorage[key];
+// Function to retrieve only the second data
+function retrieveSecondData(key) {
+  const storedData = systemstorage[key];
+
+  if (storedData) {
+    return storedData.uic;
+  } else {
+    return null; // or any default value you prefer
+  }
 }
 
 io.on("connection", (socket) => {
@@ -55,12 +63,11 @@ io.on("connection", (socket) => {
     socket.on("id" ,  (data)=>{
         io.emit("id" , ({user: data.user ,uic: data.uic}));
         savetosystemstorage(socket.id , data.user ,data.uic);
-        console.log(retrievefromsystemstorage(socket.id));
+        console.log(retrieveSecondData(socket.id));
     })
     socket.on("disconnect" , ()=>{
-      const data = retrievefromsystemstorage(socket.id);
-      let s = data.uic;
-      io.emit("disc" , ({uic: s , t: "t"}));
+      const data = retrieveSecondData(socket.id);
+      io.emit("disc" , ({uic: data}));
       
     })
 });
