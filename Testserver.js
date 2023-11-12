@@ -4,7 +4,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 let username;
-const systemstorage = {};
+let systemstorage = {};
 const server = http.createServer(app);
 
 const io = new Server(server, {
