@@ -50,7 +50,7 @@ function retrieveSecondData(key) {
 io.on("connection", (socket) => {
   	socket.on("redirect-request" , (data)=>{
       const code = generateUniqueCode();
-      io.emit(data,{link:"https://fearfulnoxiouslegacy.development98979.repl.co/" , uic: code});
+      io.emit(data,{link:"https://resonant-squirrel-ba2715.netlify.app" , uic: code});
     })
     socket.on("enckey",(data)=>{
         io.emit("enckey", ({user: data.user , key: data.key }));
