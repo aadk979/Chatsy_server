@@ -63,7 +63,6 @@ io.on("connection", (socket) => {
     socket.on("id" ,  (data)=>{
         io.emit("id" , ({user: data.user ,uic: data.uic}));
         savetosystemstorage(socket.id , data.user ,data.uic);
-        console.log(retrieveSecondData(socket.id));
     })
     socket.on("disconnect" , ()=>{
       const data = retrieveSecondData(socket.id);
