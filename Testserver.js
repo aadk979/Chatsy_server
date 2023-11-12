@@ -59,7 +59,7 @@ io.on("connection", (socket) => {
     })
     socket.on("disconnect" , ()=>{
       const dat = retrievefromsystemstorage(socket.id);
-      io.emit("disc" , ({uic: dat.uic}));
+      io.emit("disc" , ({uic: data.uic}));
       
     })
 });
