@@ -51,7 +51,7 @@ function retrieveSecondData(key) {
 }
 
 io.on("connection", (socket) => {
-  console.log("conn")
+  	console.log("conn");
     socket.on("redirect-request", (data) => {
         const code = generateUniqueCode();
         io.emit(data, { link: "https://resonant-squirrel-ba2715.netlify.app", uic: code });
