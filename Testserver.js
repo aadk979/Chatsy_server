@@ -19,7 +19,19 @@ const storage = multer.memoryStorage(); // You can change this to save files to 
 const upload = multer({ storage: storage });
 
 function generateUniqueCode() {
-    // Your existing code for generating a unique code
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let code = '';
+
+  for (let i = 0; i < 15; i++) {
+    code += characters.charAt(Math.floor(Math.random() * characters.length));
+
+    // Add a dash every 5 characters except for the last one
+    if ((i + 1) % 5 === 0 && i !== 14) {
+      code += '-';
+    }
+  }
+
+  return code;
 }
 
 let systemstorage = {};
