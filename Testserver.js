@@ -79,8 +79,8 @@ io.on("connection", (socket) => {
   		let messagingSenderId= "799254440677";
   		let appId= "1:799254440677:web:bf21610dd8e99c10a5820c";
   		let measurementId= "G-E4HENDDV36";
-      io.emit(data, ({api: apiKey,dom: authDomain , pi: projectId , sb: storageBucket , ms: messagingSenderId, ai: appId , mi: measurementId}))
-    })
+      io.emit(data, ({api: apiKey,dom: authDomain , pi: projectId , sb: storageBucket , ms: messagingSenderId, ai: appId , mi: measurementId}));
+    });
 
     socket.on("disconnect", () => {
         const data = retrieveSecondData(socket.id);
