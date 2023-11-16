@@ -3,7 +3,6 @@ const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
-const multer = require("multer");
 
 const server = http.createServer(app);
 
@@ -15,8 +14,7 @@ const io = new Server(server, {
 });
 
 // Set up multer for handling file uploads
-const storage = multer.memoryStorage(); // You can change this to save files to disk if needed
-const upload = multer({ storage: storage });
+
 
 function generateUniqueCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -51,7 +49,6 @@ function retrieveSecondData(key) {
 }
 
 io.on("connection", (socket) => {
-  	console.log("conn");
     socket.on("redirect-request", (data) => {
         const code = generateUniqueCode();
         io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code });
@@ -74,14 +71,16 @@ io.on("connection", (socket) => {
         savetosystemstorage(socket.id, data.user, data.uic);
     });
 
-    // Handle file upload event
-    socket.on("file", upload.single("file"), (data) => {
-        // Process the uploaded file
-        const fileBuffer = data.file.buffer; // This is the file content in a Buffer
-
-        // Example: Emit a message with the file content to all clients
-        io.emit("file", { content: fileBuffer.toString("base64") });
-    });
+    socket.on("database", (data)=>{
+      let apiKey= "AIzaSyBUPdvAhW0_nvsORmn-FbMjKHmMQ6k9RW8";
+  		let authDomain= "chat-app-1c51b.firebaseapp.com";
+  		let projectId= "chat-app-1c51b";
+  		let storageBucket= "chat-app-1c51b.appspot.com";
+  		let messagingSenderId= "799254440677";
+  		let appId= "1:799254440677:web:bf21610dd8e99c10a5820c";
+  		let measurementId= "G-E4HENDDV36";
+      io.emit(data, ({api: apiKey,dom: authDomain , pi: projectId , sb: storageBucket , ms: messagingSenderId, ai: appId , mi: measurementId}))
+    })
 
     socket.on("disconnect", () => {
         const data = retrieveSecondData(socket.id);
