@@ -61,12 +61,12 @@ function grc() {
 const valu = {};
 
 function add(u,i){
-  valu[u] = {id: i};
+  valu[u] = i;
 }
 
 function check(u,c){
   const so = valu[u];
-  if(so.id === c){
+  if(so === c){
     return "valid";
   }else{
     return "invalid";
