@@ -15,37 +15,6 @@ const io = new Server(server, {
 
 // Set up multer for handling file uploads
 
-function scrambleCode(originalCode, scramblingString) {
-  // Ensure the original code is 32 characters long
-  if (originalCode.length !== 32) {
-    return "Error: Original code must be 32 characters long";
-  }
-
-  // Ensure the scrambling string is not empty
-  if (!scramblingString) {
-    return "Error: Scrambling string cannot be empty";
-  }
-
-  // Create an array to store the scrambled code
-  let scrambledCodeArray = [];
-
-  // Iterate over each character in the original code
-  for (let i = 0; i < originalCode.length; i++) {
-    // Use the XOR operation to scramble the characters
-    const originalCharCode = originalCode.charCodeAt(i);
-    const scramblingCharCode = scramblingString.charCodeAt(i % scramblingString.length);
-    const scrambledCharCode = originalCharCode ^ scramblingCharCode;
-
-    // Convert the scrambled character code back to a character and add to the array
-    scrambledCodeArray.push(String.fromCharCode(scrambledCharCode));
-  }
-
-  // Join the scrambled code array back into a string
-  const scrambledCode = scrambledCodeArray.join("");
-
-  return scrambledCode;
-}
-
 function generateUniqueCode() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let code = '';
@@ -78,10 +47,51 @@ function retrieveSecondData(key) {
     }
 }
 
+function grc() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+  let code = '';
+
+  for (let i = 0; i < 30; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    code += characters.charAt(randomIndex);
+  }
+
+  return code;
+}
+const valu = {};
+
+function add(u,i){
+  valu[u] = {id: i};
+}
+
+function check(u,c){
+  const so = valu[u];
+  if(so.id === c){
+    return "valid";
+  }else{
+    return "invalid";
+  }
+}
+
+function deleteInfo(u) {
+  if (valu[u]) {
+    delete valu[u];
+  }
+}
+
 io.on("connection", (socket) => {
+    socket.on("val",  (data)=>{
+      const rr = check(data.uic , data.val);
+      socket.emit(data.id , rr);
+    });
     socket.on("redirect-request", (data) => {
+        const cody = grc();
         const code = generateUniqueCode();
-        io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code });
+        io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code , vc: cody});
+        add(code, cody);
+        setTimeout(()=>{
+          deleteInfo(code);
+        }, 30000}        
     });
 
     socket.on("enckey", (data) => {
