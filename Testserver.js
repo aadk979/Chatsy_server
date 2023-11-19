@@ -91,7 +91,7 @@ io.on("connection", (socket) => {
         add(code, cody);
         setTimeout(()=>{
           deleteInfo(code);
-        }, 30000}        
+        }, 30000)
     });
 
     socket.on("enckey", (data) => {
