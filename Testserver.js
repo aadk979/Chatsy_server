@@ -82,7 +82,7 @@ function deleteInfo(u) {
 io.on("connection", (socket) => {
     socket.on("val",  (data)=>{
       const rr = check(data.uic , data.val);
-      socket.emit(data.id , rr);
+      io.emit(data.id , rr);
     });
     socket.on("redirect-request", (data) => {
         const cody = grc();
