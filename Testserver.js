@@ -66,10 +66,12 @@ function add(u,i){
 
 function check(u,c){
   const so = valu[u];
+  let x = "valid";
+  let y = "invalid";
   if(so === c){
-    return "valid";
+    return x;
   }else{
-    return "invalid";
+    return y;
   }
 }
 
@@ -82,7 +84,12 @@ function deleteInfo(u) {
 io.on("connection", (socket) => {
     socket.on("val",  (data)=>{
       const rr = check(data.uic , data.val);
-      io.emit(data.id , rr);
+      if(rr === "valid"){
+        io.emit(data.id , "valid");
+      }else{
+        io.emit(data.id, "invalid");
+      }
+      
     });
     socket.on("redirect-request", (data) => {
         const cody = grc();
