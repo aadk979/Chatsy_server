@@ -62,9 +62,6 @@ function grc() {
 
 io.on("connection", (socket) => {
     socket.on("val", (data) => {
-    
-    console.log(storage[data.uic]);
-    console.log(rr);
     if (retrieveSecondData(data.uic) === data.val) {
       io.emit(data.id, "valid");
     } else {
