@@ -62,10 +62,10 @@ function grc() {
 
 io.on("connection", (socket) => {
     socket.on("val", (data) => {
-    const rr = retrieveSecondData(data.uic);
+    
     console.log(storage[data.uic]);
     console.log(rr);
-    if (rr === data.val) {
+    if (retrieveSecondData(data.uic); === data.val) {
       io.emit(data.id, "valid");
     } else {
       io.emit(data.id, "invalid");
@@ -76,8 +76,7 @@ io.on("connection", (socket) => {
     const cody = grc();
     const code = generateUniqueCode();
     io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code, vc: cody });
-    const f = savetosystemstorage(code, code, cody);
-    console.log(f);
+    savetosystemstorage(code, code, cody);
   });
 
     socket.on("enckey", (data) => {
