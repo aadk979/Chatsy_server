@@ -65,7 +65,7 @@ io.on("connection", (socket) => {
     
     console.log(storage[data.uic]);
     console.log(rr);
-    if (retrieveSecondData(data.uic); === data.val) {
+    if (retrieveSecondData(data.uic) === data.val) {
       io.emit(data.id, "valid");
     } else {
       io.emit(data.id, "invalid");
