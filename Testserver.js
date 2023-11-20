@@ -77,7 +77,7 @@ io.on("connection", (socket) => {
   });
 
     socket.on("key", (data) => {
-        io.emit("enckey", { to: data.to,from: data.from, key: data.key });
+        io.emit("key", { to: data.to,from: data.from, key: data.key });
     });
 
     socket.on("message", (data) => {
