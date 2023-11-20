@@ -58,43 +58,27 @@ function grc() {
 
   return code;
 }
-const storage = {};
 
-function add(key, value) {
-  storage[key] = value;
-}
-
-function check(key, comparisonValue) {
-  const storedValue = storage[key];
-  return storedValue === comparisonValue ? "valid" : "invalid";
-}
-
-function deleteInfo(u) {
-  if (storage[u]) {
-    delete storage[u];
-  }
-}
 
 io.on("connection", (socket) => {
-    socket.on("val",  (data)=>{
-      const rr = check(data.uic , data.val);
-      console.log(storage[data.uic]);
-      console.log(rr);
-      if(rr === "valid"){
-        io.emit(data.id , "valid");
-      }else{
-        io.emit(data.id, "invalid");
-      }
-      
-    });
-    socket.on("redirect-request", (data) => {
-        const cody = grc();
-        const code = generateUniqueCode();
-        io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code , vc: cody});
-        const f = add(code, cody);
-        console.log(f);
-        
-    });
+    socket.on("val", (data) => {
+    const rr = check(data.uic, data.val);
+    console.log(storage[data.uic]);
+    console.log(rr);
+    if (rr === "valid") {
+      io.emit(data.id, "valid");
+    } else {
+      io.emit(data.id, "invalid");
+    }
+  });
+
+  socket.on("redirect-request", (data) => {
+    const cody = grc();
+    const code = generateUniqueCode();
+    io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code, vc: cody });
+    const f = add(code, cody);
+    console.log(f);
+  });
 
     socket.on("enckey", (data) => {
         io.emit("enckey", { user: data.user, key: data.key });
@@ -135,7 +119,22 @@ io.on("connection", (socket) => {
       io.emit(data.c , (se));
     });
 });
+const storage = {};
 
+function add(key, value) {
+  storage[key] = value;
+}
+
+function check(key, comparisonValue) {
+  const storedValue = storage[key];
+  return storedValue === comparisonValue ? "valid" : "invalid";
+}
+
+function deleteInfo(u) {
+  if (storage[u]) {
+    delete storage[u];
+  }
+}
 const PORT = process.env.PORT || 5500;
 
 server.listen(PORT, () => {
