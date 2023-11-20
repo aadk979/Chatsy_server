@@ -93,9 +93,7 @@ io.on("connection", (socket) => {
         io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code , vc: cody});
         const f = add(code, cody);
         console.log(f);
-        setTimeout(()=>{
-          deleteInfo(code);
-        }, 30000)
+        
     });
 
     socket.on("enckey", (data) => {
