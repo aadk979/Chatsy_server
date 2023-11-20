@@ -76,8 +76,8 @@ io.on("connection", (socket) => {
     savetosystemstorage(code, code, cody);
   });
 
-    socket.on("enckey", (data) => {
-        io.emit("enckey", { user: data.user, key: data.key });
+    socket.on("key", (data) => {
+        io.emit("enckey", { to: data.to,from: data.from, key: data.key });
     });
 
     socket.on("message", (data) => {
