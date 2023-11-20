@@ -58,26 +58,20 @@ function grc() {
 
   return code;
 }
-const valu = {};
+const storage = {};
 
-function add(u,i){
-  valu[u] = i;
+function add(key, value) {
+  storage[key] = value;
 }
 
-function check(u,c){
-  const so = valu[u];
-  let x = "valid";
-  let y = "invalid";
-  if(so === c){
-    return x;
-  }else{
-    return y;
-  }
+function check(key, comparisonValue) {
+  const storedValue = storage[key];
+  return storedValue === comparisonValue ? "valid" : "invalid";
 }
 
 function deleteInfo(u) {
-  if (valu[u]) {
-    delete valu[u];
+  if (storage[u]) {
+    delete storage[u];
   }
 }
 
