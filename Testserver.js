@@ -78,7 +78,7 @@ function deleteInfo(u) {
 io.on("connection", (socket) => {
     socket.on("val",  (data)=>{
       const rr = check(data.uic , data.val);
-      console.log(valu[data.uic]);
+      console.log(storage[data.uic]);
       console.log(rr);
       if(rr === "valid"){
         io.emit(data.id , "valid");
