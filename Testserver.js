@@ -62,17 +62,20 @@ function grc() {
 
 io.on("connection", (socket) => {
     socket.on("val", (data) => {
-    if (retrieveSecondData(data.uic) === data.val) {
-      io.emit(data.id, "valid");
-    } else {
-      io.emit(data.id, "invalid");
-    }
-  });
+      console.log(retrieveSecondData(data.uic))
+    	if (retrieveSecondData(data.uic) === data.val) {
+     	 io.emit(data.id, "valid");
+    	} else {
+     	 io.emit(data.id, "invalid");
+    	}
+  	});
 
   socket.on("redirect-request", (data) => {
     const cody = grc();
     const code = generateUniqueCode();
     io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code, vc: cody });
+    console.log("uic: " + code);
+    console.log("valc: " + cody);
     savetosystemstorage(code, code, cody);
   });
 
