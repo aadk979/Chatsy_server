@@ -84,6 +84,7 @@ function deleteInfo(u) {
 io.on("connection", (socket) => {
     socket.on("val",  (data)=>{
       const rr = check(data.uic , data.val);
+      console.log(valu[data.uic]);
       console.log(rr);
       if(rr === "valid"){
         io.emit(data.id , "valid");
@@ -96,7 +97,8 @@ io.on("connection", (socket) => {
         const cody = grc();
         const code = generateUniqueCode();
         io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code , vc: cody});
-        add(code, cody);
+        const f = add(code, cody);
+        console.log(f);
         setTimeout(()=>{
           deleteInfo(code);
         }, 30000)
