@@ -35,6 +35,20 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: databaseURL,
 });
+async function saveToReportLog(name, reason, sender) {
+  // Add a new document with the specified data
+  db.collection('report_log').add({
+    name: name,
+    reason: reason,
+    sender: sender
+  })
+  .then((docRef) => {
+    console.log('Document written with ID: ', docRef.id);
+  })
+  .catch((error) => {
+    console.error('Error adding document: ', error);
+  });
+}
 
 async function ban(ip,c,d) {
   // Get a reference to the 'banned' collection
@@ -142,6 +156,10 @@ io.on("connection", (socket) => {
     savetosystemstorage(code, code, cody);
   });
 
+    socket.on("report", (data)=>{
+        io.emit("report" , ({name: data.name}));
+        saveToReportLog(data.name,data.reason,data.reproter);
+    });
     socket.on("key", (data) => {
         io.emit("key", { to: data.to,from: data.from, key: data.key });
     });
