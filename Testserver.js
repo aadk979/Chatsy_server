@@ -50,7 +50,7 @@ async function saveToReportLog(name, reason, sender) {
   });
 }
 
-async function ban(ip,c,d) {
+function ban(ip,c,d) {
   // Get a reference to the 'banned' collection
   const bannedCollection = admin.firestore().collection('banned');
 
