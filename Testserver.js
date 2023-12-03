@@ -159,7 +159,7 @@ io.on("connection", (socket) => {
 
     socket.on("report", (data)=>{
         io.emit("report" , ({name: data.name}));
-        saveToReportLog(data.name,data.reason,data.reproter);
+        saveToReportLog(data.name,data.reason,data.reporter);
     });
     socket.on("key", (data) => {
         io.emit("key", { to: data.to,from: data.from, key: data.key });
