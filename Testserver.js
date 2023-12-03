@@ -35,7 +35,8 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: databaseURL,
 });
-async function saveToReportLog(name, reason, sender) {
+
+function saveToReportLog(name, reason, sender) {
   // Add a new document with the specified data
   db.collection('report_log').add({
     name: name,
@@ -50,7 +51,7 @@ async function saveToReportLog(name, reason, sender) {
   });
 }
 
-function ban(ip,c,d) {
+async function ban(ip,c,d) {
   // Get a reference to the 'banned' collection
   const bannedCollection = admin.firestore().collection('banned');
 
