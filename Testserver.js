@@ -38,7 +38,7 @@ admin.initializeApp({
 
 function saveToReportLog(name, reason, sender) {
   // Add a new document with the specified data
-  db.collection('report_log').add({
+  admin.firestore().collection('report_log').add({
     name: name,
     reason: reason,
     sender: sender
