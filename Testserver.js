@@ -6,7 +6,7 @@ const cors = require("cors");
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "*",
+        origin: ["https://chatsy-entry.netlify.app" , "https://chatsy-chat.netlify.app"],
         methods: ["GET", "POST"]
     }
 });
@@ -153,7 +153,7 @@ io.on("connection", (socket) => {
   socket.on("redirect-request", (data) => {
     const cody = grc();
     const code = generateUniqueCode();
-    io.emit(data, { link: "https://conversation-hub-chat.netlify.app", uic: code, vc: cody });
+    io.emit(data, { link: "https://chatsy-chat.netlify.app", uic: code, vc: cody });
     savetosystemstorage(code, code, cody);
   });
 
