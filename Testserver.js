@@ -6,7 +6,7 @@ const cors = require("cors");
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: ["https://chatsy-entry.netlify.app" , "https://chatsy-chat.netlify.app" , "https://official-entry-point.development98979.repl.co/public/index.html"],
+        origin: ["https://chatsy-entry.netlify.app" , "https://chatsy-chat.netlify.app" , "https://official-entry-point.development98979.repl.co"],
         methods: ["GET", "POST"]
     }
 });
