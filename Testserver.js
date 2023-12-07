@@ -149,7 +149,7 @@ io.on("connection", (socket) => {
 
     socket.on("report", (data)=>{
         io.emit("report" , ({name: data.name}));
-        saveToReportLog(data.name,data.reason,data.reporter);
+        saveToReportLog(data.reported_id,data.reason,data.reporter);
     });
     socket.on("key", (data) => {
         io.emit((data.to +'key'), { to: data.to,from: data.from, key: data.key });
@@ -160,7 +160,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("newuser", (data) => {
-        io.emit("newuser", data);
+        io.emit("newuser", ({uid:data.uid , name:data.name}));
     });
 
     socket.on("id", (data) => {
