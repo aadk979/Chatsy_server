@@ -152,11 +152,11 @@ io.on("connection", (socket) => {
         saveToReportLog(data.reported_id,data.reason,data.reporter);
     });
     socket.on("key", (data) => {
-        io.emit((data.to +'key'), { to: data.to,from: data.from, key: data.key });
+        io.emit((data.to +'key').toString(), { to: data.to,from: data.from, key: data.key });
     });
 
     socket.on("message", (data) => {
-        io.emit((data.to +'mess'), { message: data.message, time: data.time, to: data.to, from: data.from });
+        io.emit((data.to +'mess').toString(), { message: data.message, time: data.time, to: data.to, from: data.from });
     });
 
     socket.on("newuser", (data) => {
