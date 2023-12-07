@@ -161,6 +161,7 @@ io.on("connection", (socket) => {
 
     socket.on("message", (data) => {
         io.emit((data.to +'mess').toString(), { message: data.message, time: data.time, to: data.to, from: data.from });
+        admin.firestore().collection('messages').add({data});
     });
 
     socket.on("newuser", (data) => {
@@ -170,17 +171,6 @@ io.on("connection", (socket) => {
     socket.on("id", (data) => {
         io.emit("id", { user: data.user, uic: data.uic });
         savetosystemstorage(socket.id, data.user, data.uic);
-    });
-
-    socket.on("database", (data)=>{
-        let apiKey = "AIzaSyBUPdvAhW0_nvsORmn-FbMjKHmMQ6k9RW8";
-  		let authDomain = "chat-app-1c51b.firebaseapp.com";
-  		let projectId = "chat-app-1c51b";
-  		let storageBucket = "chat-app-1c51b.appspot.com";
-  		let messagingSenderId = "799254440677";
-  		let appId = "1:799254440677:web:bf21610dd8e99c10a5820c";
-  		let measurementId = "G-E4HENDDV36";
-      io.emit(data, ({api: apiKey,dom: authDomain , pi: projectId , sb: storageBucket , ms: messagingSenderId, ai: appId , mi: measurementId}));
     });
 
     socket.on("disconnect", () => {
