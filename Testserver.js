@@ -48,7 +48,7 @@ function saveToReportLog(name, reason, sender) {
     name: name,
     reason: reason,
     sender: sender,
-    action_taken: ac;
+    action_taken: ac
   })
   .then((docRef) => {
     console.log('Document written with ID: ', docRef.id);
