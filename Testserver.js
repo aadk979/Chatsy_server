@@ -37,18 +37,22 @@ admin.initializeApp({
 });
 
 function saveToReportLog(name, reason, sender) {
-  // Add a new document with the specified data
   let ac;
-    
+
+  // Disable the user using Firebase Admin SDK
   admin.auth().updateUser(name, {
-      disabled: true,
+    disabled: true,
   })
-  .then((r)=>{ac = `User with uid ${r.uid} has been suspended.`});
-  admin.firestore().collection('report_log').add({
-    name: name,
-    reason: reason,
-    sender: sender,
-    action_taken: ac
+  .then((r) => { 
+    ac = `User with uid ${r.uid} has been suspended.`;
+
+    // Add a new document with the specified data
+    return admin.firestore().collection('report_log').add({
+      name: name,
+      reason: reason,
+      sender: sender,
+      action_taken: ac
+    });
   })
   .then((docRef) => {
     console.log('Document written with ID: ', docRef.id);
