@@ -38,10 +38,17 @@ admin.initializeApp({
 
 function saveToReportLog(name, reason, sender) {
   // Add a new document with the specified data
+  let ac;
+    
+  admin.auth().updateUser(uid, {
+      disabled: true,
+  })
+  .then((r)=>{ac = `User with uid `${r.uid}` has been suspended.`});
   admin.firestore().collection('report_log').add({
     name: name,
     reason: reason,
-    sender: sender
+    sender: sender,
+    action_taken: ac;
   })
   .then((docRef) => {
     console.log('Document written with ID: ', docRef.id);
@@ -68,11 +75,11 @@ async function ban(ip,c,d) {
       // Log the document data
       const datar = docSnapshot.data();
       io.emit(c, datar.trial);
-      docRef.set({ip:ip, trial: (datar.trial + 1)});
+      docRef.set({uid:ip, trial: (datar.trial + 1)});
     } else {
       // If the document doesn't exist, add it
       await docRef.set({
-        ip: ip,
+        uid: ip,
         trial: 1,
         date_start:d
       });
@@ -82,22 +89,6 @@ async function ban(ip,c,d) {
     // Handle errors
     console.error('Error accessing document:', error);
   }
-}
-
-function generateUniqueCode() {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  let code = '';
-
-  for (let i = 0; i < 15; i++) {
-    code += characters.charAt(Math.floor(Math.random() * characters.length));
-
-    // Add a dash every 5 characters except for the last one
-    if ((i + 1) % 5 === 0 && i !== 14) {
-      code += '-';
-    }
-  }
-
-  return code;
 }
 
 let systemstorage = {};
@@ -134,7 +125,7 @@ function grc() {
 }
 
 io.on("connection", (socket) => {
-  console.log("com");
+    console.log("com");
     socket.on("val", (data) => {
     	if (retrieveSecondData(data.uic) === data.val) {
      	 io.emit(data.id, "valid");
@@ -150,23 +141,22 @@ io.on("connection", (socket) => {
       console.log(data.c);
     });
 
-  socket.on("redirect-request", (data) => {
-    const cody = grc();
-    const code = generateUniqueCode();
-    io.emit(data, { link: "https://chatsy-chat.netlify.app", uic: code, vc: cody });
-    savetosystemstorage(code, code, cody);
-  });
+    socket.on("redirect-request", (data) => {
+        const cody = grc();
+        io.emit(data.c, { vc: cody });
+        savetosystemstorage(data.uid, data.uid, cody);
+    });
 
     socket.on("report", (data)=>{
         io.emit("report" , ({name: data.name}));
         saveToReportLog(data.name,data.reason,data.reporter);
     });
     socket.on("key", (data) => {
-        io.emit("key", { to: data.to,from: data.from, key: data.key });
+        io.emit((data.to +'key'), { to: data.to,from: data.from, key: data.key });
     });
 
     socket.on("message", (data) => {
-        io.emit("message", { message: data.message, time: data.time, to: data.to, from: data.from });
+        io.emit((data.to +'mess'), { message: data.message, time: data.time, to: data.to, from: data.from });
     });
 
     socket.on("newuser", (data) => {
@@ -199,5 +189,5 @@ io.on("connection", (socket) => {
 const PORT = process.env.PORT || 5764;
 
 server.listen(PORT, () => {
-    console.log(`Server is up and running, server listening on port ${PORT}.`);
+    console.log(`Server is up and running on port : ${PORT}.`);
 });
