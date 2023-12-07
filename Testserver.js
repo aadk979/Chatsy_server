@@ -43,7 +43,7 @@ function saveToReportLog(name, reason, sender) {
   admin.auth().updateUser(uid, {
       disabled: true,
   })
-  .then((r)=>{ac = `User with uid `${r.uid}` has been suspended.`});
+  .then((r)=>{ac = `User with uid ${r.uid} has been suspended.`});
   admin.firestore().collection('report_log').add({
     name: name,
     reason: reason,
