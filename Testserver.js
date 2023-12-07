@@ -40,7 +40,7 @@ function saveToReportLog(name, reason, sender) {
   // Add a new document with the specified data
   let ac;
     
-  admin.auth().updateUser(uid, {
+  admin.auth().updateUser(name, {
       disabled: true,
   })
   .then((r)=>{ac = `User with uid ${r.uid} has been suspended.`});
