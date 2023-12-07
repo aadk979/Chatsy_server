@@ -15,16 +15,16 @@ const admin = require('firebase-admin');
 
 // Your Firebase Admin SDK configuration
 const serviceAccount = {
-  "type": "service_account",
-  "project_id": "chat-app-1c51b",
-  "private_key_id": "29c2ea244b666f5553cdcd3eb3adb22638ad9be3",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCcOtqg6aOqlcuh\nrm1BFEkcBSL0VOvphn+4EO1ibbGhIcsjHple9DYs6F1M8UrrRZvf2wbwzmY6Pwtk\nLswYUt1zYn5TqfDCViP6l1vUu2P+eLpKwLl2XJMTttFJIFKYDCY+nH9ERj4I0OWN\nPLuvCg+Qc4DtYR1tMypmoFx8u/NUM7Nd0kfw2SMnZ1N25kLMh58tPJ66SiuMMNAm\niVyF5A4KYdHFSWVsBSYsbwteb5yp05PqQyyYqPuuboRx0SbnvX5zvBlqEqYhfmER\nja8Jf1SumrlL6MiymwyGU5YeVVZAewJYatZYWGErkYPmlM9mlPvtUIOztLSQSvTB\nGMzwgF2jAgMBAAECggEADnk3WvP6OSoCgPqPXZmbAlEJgXhCmNJgj7VlwJon/CUM\n1DaX/9+BC10Fk8TA65X50F3SwUll2BySGhhpyREYOgHUcTzLtL1VPPh7xfQMWf1m\nSNmc9PWznH5x2iP38uUhP+iws6sMQTXVJmYLfzZf5cKFnbhDCSRV18cgel/RNaol\nXB387vybI85+t0JXpq9Ll3kkmIIUnpQLlziYPz8cowP3KNGV7R12BztpfTinBDhE\njahppwy28YdUtG30afp7s3JQJ/Eq7xLEPKIbHKMnIhwGmwlDEyuLq0xqaO+Xwpk6\nnpa/LPEhZZwNQMM4xHq2pTF+bXkZvOvWD1oLj5lMtQKBgQDWxLARDN9KBIGrRyi6\nM+00XX6ACpiQMQREFn3jw12BbKWVfuUjoa7zLRLaV2Hv7JrpFOSa8tQYMzM052Om\n19Z06zJrDxzeDkxXreST9Tx6jD/Qnez+DVO91OeVRleMsg4J+zx1TSawHyDytXz1\nBkkTEgh0GHMNOG7xGuOtStEZBwKBgQC6OSc61X2rVB49iuA3qSen2pxy5ydCvcoF\n+CFAOW9CK3yvxZc5I2RscCbi+dmc7tYuaPd24AYYMozTSvwl+yl7AA06pV3DgtZ8\nL4KUFIYn5SA/2fzMgPLxjxNYIUBmBQi3L5CsfRZ7PKgabEr0bNdXZNuBDPjejmqy\n4DMwEGh7hQKBgQCf2SDab+Q5aQVB/+KWRFPGZ9fhYQGQQItWSg9E2IHd9ImBrULK\ntGpMYD3p+KPSOR5LYNuNYDLwGBuCwr3uzjK2LuAFwufPdoDnuWupnBt5cq2EjiZ4\nKF8tqSr8dbBv7Y55a17iR5wF9gVF4EKy9Ayrfv5/ujrXmisolMTklAzxPQKBgHF4\nM8Qwo+NKXSbIwTiJNKWdmiiVWqHbPQcIG1Kj7HwYPWBo+G0TeLRuXfN9pDBwg0dC\nJE9lz7Dc1FxG239VHABblrP+YTSpO4Ht/RW3r8sNXOorLFN72wx/Tp0rna7MMHRW\nYkQH8DPlUNTQ2Zc33rrctLdcrSQHCVK3M9l8lf11AoGABzDlSOrk78Cb4iUqJX5y\n8FeqRQJmFb6uDVpJiJheiKLvh3ulNZWigWk2jNVJwCmJC6mCTOGPjiUttFsOW909\nTdIbJ0LuZr4OZpazhk4IrdDtWwEBv/kdaB+ByU3ho9i6/o6LaxFEgQS+g/n9LUzK\nK/DuTmEEyde4TBrYbO7mbyk=\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-fqhxg@chat-app-1c51b.iam.gserviceaccount.com",
-  "client_id": "113227241884187599583",
-  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-  "token_uri": "https://oauth2.googleapis.com/token",
-  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fqhxg%40chat-app-1c51b.iam.gserviceaccount.com",
+  type: process.env.type,
+  project_id: process.env.project_id,
+  private_key_id: process.env.private_key_id,
+  private_key: process.env.private_key.replace(/\\n/g, '\n'), // Replace escaped newlines
+  client_email: process.env.client_email,
+  client_id: process.env.client_id,
+  auth_uri: process.env.auth_uri,
+  token_uri: process.env.token_uri,
+  auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
+  client_x509_cert_url: process.env.client_x509_cert_url,
 };
 
 // Your Firestore database URL
