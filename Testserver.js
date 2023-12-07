@@ -148,7 +148,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on("report", (data)=>{
-        io.emit("report" , ({name: data.name}));
+        io.emit("report" , ({name: data.reported_id}));
         saveToReportLog(data.reported_id,data.reason,data.reporter);
     });
     socket.on("key", (data) => {
