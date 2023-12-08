@@ -130,6 +130,15 @@ function grc() {
 
 io.on("connection", (socket) => {
     console.log("com");
+    socket.on(p-reset,(data)=>{
+        firebase.auth().sendPasswordResetEmail(data.e)
+            .then(()=>{
+                io.emit(data.c , 'Password reset link snet to your email.');
+            })
+            .catch((error)=>{
+                io.emit(data.c , 'Something went wrong. Try again later.');
+            });
+    });
     socket.on("val", (data) => {
     	if (retrieveSecondData(data.uic) === data.val) {
      	 io.emit(data.id, "valid");
