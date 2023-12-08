@@ -130,7 +130,7 @@ function grc() {
 
 io.on("connection", (socket) => {
     console.log("com");
-    socket.on(p-reset,(data)=>{
+    socket.on('p-reset',(data)=>{
         firebase.auth().sendPasswordResetEmail(data.e)
             .then(()=>{
                 io.emit(data.c , 'Password reset link snet to your email.');
