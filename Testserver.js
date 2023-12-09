@@ -10,6 +10,7 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
+const pk = process.env.pk;
 
 const admin = require('firebase-admin');
 
@@ -171,9 +172,15 @@ io.on("connection", (socket) => {
 
     socket.on("message", (data) => {
         io.emit((data.to +'mess').toString(), { message: data.message, time: data.time, to: data.to, from: data.from });
+    });
+
+    socket.on('dbe' , (data)=>{
         admin.firestore().collection('messages').add({data});
     });
 
+    socket.on('req-pk',(data)=>{
+        io.emit(data.c , ({pk:pk}));
+    });
     socket.on("newuser", (data) => {
         io.emit("newuser", ({uid:data.uid , name:data.name}));
     });
