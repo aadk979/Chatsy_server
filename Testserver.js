@@ -11,6 +11,7 @@ const io = new Server(server, {
     }
 });
 const pk = process.env.pk;
+const spk = process.env.spk;
 
 const admin = require('firebase-admin');
 
@@ -63,39 +64,6 @@ function saveToReportLog(name, reason, sender) {
   });
 }
 
-async function ban(ip,c,d) {
-  // Get a reference to the 'banned' collection
-  const bannedCollection = admin.firestore().collection('banned');
-
-  // Get a reference to the document with the given name
-  const docRef = bannedCollection.doc(ip);
-
-  try {
-    // Try to get the document
-    const docSnapshot = await docRef.get();
-
-    // Check if the document exists
-    //docSnapshot.data()
-    if (docSnapshot.exists) {
-      // Log the document data
-      const datar = docSnapshot.data();
-      io.emit(c, datar.trial);
-      docRef.set({uid:ip, trial: (datar.trial + 1)});
-    } else {
-      // If the document doesn't exist, add it
-      await docRef.set({
-        uid: ip,
-        trial: 1,
-        date_start:d
-      });
-      io.emit(c, 1);
-    }
-  } catch (error) {
-    // Handle errors
-    console.error('Error accessing document:', error);
-  }
-}
-
 let systemstorage = {};
 
 function savetosystemstorage(key, data1, data2) {
@@ -127,6 +95,10 @@ function grc() {
   }
 
   return code;
+}
+function dec(spkk , m){
+    const decryptedData = crypto.privateDecrypt({key: spkk,passphrase: '' }, m );
+    return decryptedData;
 }
 
 io.on("connection", (socket) => {
@@ -178,9 +150,15 @@ io.on("connection", (socket) => {
         admin.firestore().collection('messages').add({data});
     });
 
+    socket.on('d-req', (data)=>{
+        const d = dec(spk, data.d);
+        io.emit(data.c , d);
+    });
+    
     socket.on('req-pk',(data)=>{
         io.emit(data.c , ({pk:pk}));
     });
+    
     socket.on("newuser", (data) => {
         io.emit("newuser", ({uid:data.uid , name:data.name}));
     });
