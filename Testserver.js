@@ -124,7 +124,7 @@ setTimeout(()=>{
         privateKey: privateKey,
         generated_date: new Date()
     });
-}):
+},5000);
 io.on("connection", (socket) => {
     console.log("com");
     socket.on('p-reset', (data) => {
