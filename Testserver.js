@@ -13,7 +13,8 @@ const io = new Server(server, {
     }
 });
 const pk = process.env.pk;
-const spk = process.env.spk;
+const spk = process.env.spk.replace(/\\n/g, '\n');
+console.log(spk);
 
 const admin = require('firebase-admin');
 
