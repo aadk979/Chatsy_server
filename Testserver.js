@@ -26,8 +26,19 @@ function getPublicKey() {
 function gk(){
   return privateKey;
 }
+function kkey() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+  let randomString = '';
+
+  for (let i = 0; i < 256; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
+
+  return randomString;
+}
 const hjk = process.env.hjk;
-const basickey = crypto.randomBytes(32); // 32 bytes = 256 bits
+const basickey = kkey(); // 32 bytes = 256 bits
 const primaryKey = (basickey.slice(0, -15))+ hjk;
 
 // Function to encrypt data
