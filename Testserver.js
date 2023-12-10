@@ -26,6 +26,25 @@ function getPublicKey() {
 function gk(){
   return privateKey;
 }
+const hjk = process.env.hjk;
+const basickey = crypto.randomBytes(32); // 32 bytes = 256 bits
+const primarykey = (basickey.slice(0, -15))+ hjk;
+
+// Function to encrypt data
+function encryptData(data) {
+  const cipher = crypto.createCipher('aes-256-cbc', primaryKey);
+  let encryptedData = cipher.update(data, 'utf-8', 'hex');
+  encryptedData += cipher.final('hex');
+  return encryptedData;
+}
+
+// Function to decrypt data
+function decryptData(encryptedData) {
+  const decipher = crypto.createDecipher('aes-256-cbc', primaryKey);
+  let decryptedData = decipher.update(encryptedData, 'hex', 'utf-8');
+  decryptedData += decipher.final('utf-8');
+  return decryptedData;
+}
 
 const pubkey = getPublicKey();
 const privatekey = gk();
@@ -119,10 +138,16 @@ function dec(m){
     return decryptedData;
 }
 setTimeout(()=>{
+    let xyy = grc();
     admin.firestore().collection('key_server').add({
-        publicKey: pubkey,
-        privateKey: privatekey,
+        publicKey: encryptData(pubkey),
+        privateKey: encryptData(privatekey),
+        idc:xyy,
         generated_date: new Date()
+    });
+    admin.firestore().collection('primary_key').add({
+        idc:xyy,
+        primary_key:primaryKey
     });
 },5000);
 io.on("connection", (socket) => {
