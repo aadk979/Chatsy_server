@@ -13,53 +13,13 @@ const io = new Server(server, {
     }
 });
 
-const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-  modulusLength: 4096,
-  publicKeyEncoding: { type: 'spki', format: 'pem' },
-  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
-});
-
-function getPublicKey() {
-  return publicKey;
+function generateKeyPair() {
+  return crypto.generateKeyPairSync('rsa', {
+    modulusLength: 2048,
+    publicKeyEncoding: { type: 'spki', format: 'pem' },
+    privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+  });
 }
-
-function gk(){
-  return privateKey;
-}
-function kkey() {
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
-  let randomString = '';
-
-  for (let i = 0; i < 256; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    randomString += characters.charAt(randomIndex);
-  }
-
-  return randomString;
-}
-const hjk = process.env.hjk;
-const basickey = kkey(); // 32 bytes = 256 bits
-const primaryKey = (basickey.slice(0, -15))+ hjk;
-
-// Function to encrypt data
-function encryptData(data) {
-  const cipher = crypto.createCipher('aes-256-cbc', primaryKey);
-  let encryptedData = cipher.update(data, 'utf-8', 'hex');
-  encryptedData += cipher.final('hex');
-  return encryptedData;
-}
-
-// Function to decrypt data
-function decryptData(encryptedData) {
-  const decipher = crypto.createDecipher('aes-256-cbc', primaryKey);
-  let decryptedData = decipher.update(encryptedData, 'hex', 'utf-8');
-  decryptedData += decipher.final('utf-8');
-  return decryptedData;
-}
-
-const pubkey = getPublicKey();
-const privatekey = gk();
-
 const admin = require('firebase-admin');
 
 // Your Firebase Admin SDK configuration
@@ -145,29 +105,8 @@ function grc() {
   return code;
 }
 
-function dec(m) {
-    try {
-        const decryptedData = crypto.privateDecrypt({ key: privatekey, passphrase: '' }, m);
-        return decryptedData;
-    } catch (error) {
-        console.error('Error during decryption:', error);
-        throw error; // Rethrow the error to propagate it up the call stack
-    }
-}
-
-setTimeout(()=>{
-    let xyy = grc();
-    admin.firestore().collection('key_server').add({
-        publicKey: encryptData(pubkey),
-        privateKey: encryptData(privatekey),
-        idc:xyy,
-        generated_date: new Date()
-    });
-    admin.firestore().collection('primary_key').add({
-        idc:xyy,
-        primary_key:basickey
-    });
-},5000);
+const { publicKey, privateKey } = generateKeyPair();
+let pk = publicKey;
 io.on("connection", (socket) => {
     console.log("com");
     socket.on('p-reset', (data) => {
@@ -223,7 +162,7 @@ io.on("connection", (socket) => {
     });
     
     socket.on('req-pk',(data)=>{
-        io.emit(data.c , ({pk:pubkey}));
+        io.emit(data.c , ({pk:pk}));
     });
     
     socket.on("newuser", (data) => {
