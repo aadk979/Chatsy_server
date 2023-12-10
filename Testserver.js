@@ -28,7 +28,7 @@ function gk(){
 }
 const hjk = process.env.hjk;
 const basickey = crypto.randomBytes(32); // 32 bytes = 256 bits
-const primarykey = (basickey.slice(0, -15))+ hjk;
+const primaryKey = (basickey.slice(0, -15))+ hjk;
 
 // Function to encrypt data
 function encryptData(data) {
