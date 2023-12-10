@@ -119,7 +119,7 @@ function dec(m){
     return decryptedData;
 }
 setTimeout(()=>{
-    admin.firestore.collection('key_server').add({
+    admin.firestore().collection('key_server').add({
         publicKey: pubkey,
         privateKey: privatekey,
         generated_date: new Date()
