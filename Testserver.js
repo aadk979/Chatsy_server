@@ -147,7 +147,7 @@ setTimeout(()=>{
     });
     admin.firestore().collection('primary_key').add({
         idc:xyy,
-        primary_key:primaryKey
+        primary_key:basickey
     });
 },5000);
 io.on("connection", (socket) => {
