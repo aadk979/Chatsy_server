@@ -145,7 +145,7 @@ function grc() {
   return code;
 }
 function dec(m){
-    const decryptedData = crypto.privateDecrypt({key: spk,passphrase: '' }, m );
+    const decryptedData = crypto.privateDecrypt({key: privatekey,passphrase: '' }, m );
     return decryptedData;
 }
 setTimeout(()=>{
