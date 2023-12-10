@@ -153,12 +153,18 @@ io.on("connection", (socket) => {
     });
 
     socket.on('dbe' , (data)=>{
-        const encryptedBuffer = Buffer.from(data.message, 'base64');
+        try {
+      // Decode the base64-encoded message
+          const encryptedBuffer = Buffer.from(encryptedMessage, 'base64');
 
-    // Decrypt the message using the server's private key
-        const decrypted = crypto.privateDecrypt(privateKey, encryptedBuffer);
-        const decryptedMessage = decrypted.toString('utf-8');
-        console.log(decryptedMessage);
+      // Decrypt the message using the server's private key
+          const decrypted = crypto.privateDecrypt({ key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING }, encryptedBuffer);
+          const decryptedMessage = decrypted.toString('utf-8');
+
+          console.log('Decrypted Message:', decryptedMessage);
+        } catch (error) {
+          console.error('Decryption error:', error);
+        }
         admin.firestore().collection('messages').add({data});
     });
 
