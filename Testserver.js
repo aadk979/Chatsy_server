@@ -99,8 +99,8 @@ function grc() {
 
   return code;
 }
-function dec(spkk , m){
-    const decryptedData = crypto.privateDecrypt({key: spkk,passphrase: '' }, m );
+function dec(m){
+    const decryptedData = crypto.privateDecrypt({key: spk,passphrase: '' }, m );
     return decryptedData;
 }
 
@@ -154,7 +154,7 @@ io.on("connection", (socket) => {
     });
 
     socket.on('d-req', (data)=>{
-        const d = dec(spk, data.d);
+        const d = dec(data.d);
         io.emit(data.c , d);
     });
     
