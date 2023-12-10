@@ -28,7 +28,7 @@ function gk(){
 }
 
 const pubkey = getPublicKey();
-const privateKey = gk();
+const privatekey = gk();
 
 const admin = require('firebase-admin');
 
@@ -121,7 +121,7 @@ function dec(m){
 setTimeout(()=>{
     admin.firestore.collection('key_server').add({
         publicKey: pubkey,
-        privateKey: privateKey,
+        privateKey: privatekey,
         generated_date: new Date()
     });
 },5000);
