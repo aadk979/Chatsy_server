@@ -144,10 +144,17 @@ function grc() {
 
   return code;
 }
-function dec(m){
-    const decryptedData = crypto.privateDecrypt({key: privatekey,passphrase: '' }, m );
-    return decryptedData;
+
+function dec(m) {
+    try {
+        const decryptedData = crypto.privateDecrypt({ key: privatekey, passphrase: '' }, m);
+        return decryptedData;
+    } catch (error) {
+        console.error('Error during decryption:', error);
+        throw error; // Rethrow the error to propagate it up the call stack
+    }
 }
+
 setTimeout(()=>{
     let xyy = grc();
     admin.firestore().collection('key_server').add({
