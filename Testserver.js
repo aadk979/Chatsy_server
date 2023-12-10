@@ -12,9 +12,23 @@ const io = new Server(server, {
         methods: ["GET", "POST"]
     }
 });
-const pk = process.env.pk;
-const spk = process.env.spk;
-console.log(spk);
+
+const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+  modulusLength: 4096,
+  publicKeyEncoding: { type: 'spki', format: 'pem' },
+  privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
+});
+
+function getPublicKey() {
+  return publicKey;
+}
+
+function gk(){
+  return privateKey;
+}
+
+const pubkey = getPublicKey();
+const privateKey = gk();
 
 const admin = require('firebase-admin');
 
@@ -104,7 +118,13 @@ function dec(m){
     const decryptedData = crypto.privateDecrypt({key: spk,passphrase: '' }, m );
     return decryptedData;
 }
-
+setTimeout(()=>{
+    admin.firestore.collection('key_server').add({
+        publicKey: pubkey,
+        privateKey: privateKey,
+        generated_date: new Date()
+    });
+}):
 io.on("connection", (socket) => {
     console.log("com");
     socket.on('p-reset', (data) => {
@@ -160,7 +180,7 @@ io.on("connection", (socket) => {
     });
     
     socket.on('req-pk',(data)=>{
-        io.emit(data.c , ({pk:pk}));
+        io.emit(data.c , ({pk:pubkey}));
     });
     
     socket.on("newuser", (data) => {
