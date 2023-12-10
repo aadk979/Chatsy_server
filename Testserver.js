@@ -155,7 +155,7 @@ io.on("connection", (socket) => {
     socket.on('dbe' , (data)=>{
         try {
       // Decode the base64-encoded message
-          const encryptedBuffer = Buffer.from(encryptedMessage, 'base64');
+          const encryptedBuffer = Buffer.from(data.message, 'base64');
 
       // Decrypt the message using the server's private key
           const decrypted = crypto.privateDecrypt({ key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING }, encryptedBuffer);
