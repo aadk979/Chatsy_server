@@ -13,6 +13,19 @@ const io = new Server(server, {
     }
 });
 
+function gent() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  const tokenLength = 50;
+  let token = '';
+
+  for (let i = 0; i < tokenLength; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    token += characters.charAt(randomIndex);
+  }
+
+  return token;
+}
+
 function generateKeyPair() {
   return crypto.generateKeyPairSync('rsa', {
     modulusLength: 2048,
@@ -109,16 +122,7 @@ const { publicKey, privateKey } = generateKeyPair();
 let pk = publicKey;
 io.on("connection", (socket) => {
     console.log("com");
-    socket.on('p-reset', (data) => {
-        admin.auth().sendPasswordResetEmail(data.e)
-            .then(() => {
-                io.emit(data.c, 'Password reset link sent to your email.');
-            })
-            .catch((error) => {
-                io.emit(data.c, 'Something went wrong. Try again later.');
-            });
-    });
-
+    
     socket.on("val", (data) => {
     	if (retrieveSecondData(data.uic) === data.val) {
      	 io.emit(data.id, "valid");
@@ -184,6 +188,14 @@ io.on("connection", (socket) => {
     socket.on("id", (data) => {
         io.emit("id", { user: data.user, uic: data.uic });
         savetosystemstorage(socket.id, data.user, data.uic);
+    });
+
+    socket.on('token' , (data)=>{
+        const token = gent();
+        io.emit(data.code , ({token: token}));
+        admin.firestore().collection('token_validation').doc(data.uic).set({
+            token:token
+        });
     });
 
     socket.on("disconnect", () => {
