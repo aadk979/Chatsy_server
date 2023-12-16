@@ -166,7 +166,16 @@ io.on("connection", (socket) => {
     });
 
     socket.on("message", (data) => {
-        io.emit((data.to +'mess').toString(), { message: data.message, time: data.time, to: data.to, from: data.from });
+        admin.firestore().collection('token_validation').doc(data.from).get()
+            .then(doc =>{
+                const data2 = doc.data();
+                if (data2 === data.token){
+                    io.emit((data.to +'mess').toString(), { message: data.message, time: data.time, to: data.to, from: data.from });
+                }
+            })
+            .catch(err =>{
+                console.log(err);
+            });
     });
 
     socket.on('dbe' , (data)=>{
