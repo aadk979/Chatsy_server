@@ -169,6 +169,8 @@ io.on("connection", (socket) => {
         admin.firestore().collection('token_validation').doc(data.from).get()
             .then(doc =>{
                 const data2 = doc.data();
+                console.log(data2);
+                console.log(data.token);
                 if (data2 === data.token){
                     io.emit((data.to +'mess').toString(), { message: data.message, time: data.time, to: data.to, from: data.from });
                 }else{
