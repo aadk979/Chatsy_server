@@ -171,6 +171,8 @@ io.on("connection", (socket) => {
                 const data2 = doc.data();
                 if (data2 === data.token){
                     io.emit((data.to +'mess').toString(), { message: data.message, time: data.time, to: data.to, from: data.from });
+                }else{
+                    io.emit('req-rejected' + data.from,'Request rejected due to validation failure.');
                 }
             })
             .catch(err =>{
