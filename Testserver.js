@@ -13,6 +13,19 @@ const io = new Server(server, {
     }
 });
 
+app.get('/config', (req, res) => {
+  const data = {
+      apiKey: "AIzaSyA2SNQrb5cGZAaiiNruy1UJTkd1yjcfMLM",
+      authDomain: "chatsy-2fb9e.firebaseapp.com",
+      projectId: "chatsy-2fb9e",
+      storageBucket: "chatsy-2fb9e.appspot.com",
+      messagingSenderId: "165871265730",
+      appId: "1:165871265730:web:00ded799d3a116cc22985b",
+      measurementId: "G-H79M3WV8Z7"
+  };
+  res.json(data);
+});
+
 function gent() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const tokenLength = 50;
