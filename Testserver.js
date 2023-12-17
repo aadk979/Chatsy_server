@@ -40,7 +40,7 @@ function gent() {
 }
 
 function emailver(useremail , name){
-    getAuth()
+    admin.auth()
       .generateSignInWithEmailLink(useremail, actionCodeSettings)
       .then((link) => {
     // Construct sign-in with email link template, embed the link and
