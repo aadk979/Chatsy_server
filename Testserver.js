@@ -203,7 +203,7 @@ io.on("connection", (socket) => {
 
     socket.on('failed_entry', (data)=>{
         try{
-            admin.firestore().collection('failed_entries').add(data);
+            admin.firestore().collection('failed_entries').add({data: data});
         } catch (e){
             console.log(e);
         }
@@ -215,7 +215,7 @@ io.on("connection", (socket) => {
 
     socket.on('logged_in', (data)=>{
         try{
-            admin.firestore().collection('logged_in').add(data);
+            admin.firestore().collection('logged_in').add({data: data});
         } catch (e){
             console.log(e);
         }
@@ -234,10 +234,6 @@ io.on("connection", (socket) => {
             .catch(err =>{
                 console.log(err);
             });
-    });
-    
-    socket.on('send' , (data)=>{
-         emailver(data.mail , data.name);
     });
     
     socket.on('dbe' , (data)=>{
