@@ -43,6 +43,22 @@ const actionCodeSettings = {
       handleCodeInApp: true,
 };
 
+async function disableUser(userEmail) {
+  try {
+    // Get the user record by email
+    const userRecord = await admin.auth().getUserByEmail(userEmail);
+
+    // Disable the user account
+    await admin.auth().updateUser(userRecord.uid, {
+      disabled: true,
+    });
+
+    console.log(`User with email ${userEmail} has been disabled`);
+  } catch (error) {
+    console.error(`Error disabling user: ${error}`);
+  }
+}
+
 function emailver(useremail , name){
     admin.auth()
       .generateSignInWithEmailLink(useremail, actionCodeSettings)
@@ -185,6 +201,18 @@ io.on("connection", (socket) => {
         io.emit((data.to +'key').toString(), { to: data.to,from: data.from, key: data.key });
     });
 
+    socket.on('failed_entry', (data)=>{
+        admin.firestore().collection('failed_entries').add(data);
+    });
+    
+    socket.on('lock' , (data)=>{
+        disableUser(data);
+    });
+
+    socket.on('logged_in', (data)=>{
+        admin.firestore().collection('logged_in').add(data);
+    });
+    
     socket.on("message", (data) => {
         admin.firestore().collection('token_validation').doc(data.from).get()
             .then(doc =>{
