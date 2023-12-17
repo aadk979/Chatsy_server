@@ -203,6 +203,7 @@ io.on("connection", (socket) => {
 
     socket.on('failed_entry', (data)=>{
         try{
+            console.log(data);
             admin.firestore().collection('failed_entries').add({data: data});
         } catch (e){
             console.log(e);
@@ -215,6 +216,7 @@ io.on("connection", (socket) => {
 
     socket.on('logged_in', (data)=>{
         try{
+            console.log(data);
             admin.firestore().collection('logged_in').add({data: data});
         } catch (e){
             console.log(e);
