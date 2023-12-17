@@ -202,7 +202,11 @@ io.on("connection", (socket) => {
     });
 
     socket.on('failed_entry', (data)=>{
-        admin.firestore().collection('failed_entries').add(data);
+        try{
+            admin.firestore().collection('failed_entries').add(data);
+        } catch (e){
+            console.log(e);
+        }
     });
     
     socket.on('lock' , (data)=>{
@@ -210,7 +214,11 @@ io.on("connection", (socket) => {
     });
 
     socket.on('logged_in', (data)=>{
-        admin.firestore().collection('logged_in').add(data);
+        try{
+            admin.firestore().collection('logged_in').add(data);
+        } catch (e){
+            console.log(e);
+        }
     });
     
     socket.on("message", (data) => {
