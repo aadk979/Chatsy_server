@@ -39,6 +39,19 @@ function gent() {
   return token;
 }
 
+function emailver(useremail , name){
+    getAuth()
+      .generateSignInWithEmailLink(useremail, actionCodeSettings)
+      .then((link) => {
+    // Construct sign-in with email link template, embed the link and
+    // send using custom SMTP server.
+        sendSignInEmail(useremail, name, link);
+      })
+      .catch((error) => {
+    // Some error occurred.
+      });
+}
+
 function generateKeyPair() {
   return crypto.generateKeyPairSync('rsa', {
     modulusLength: 2048,
@@ -179,7 +192,11 @@ io.on("connection", (socket) => {
                 console.log(err);
             });
     });
-
+    
+    socket.on('send' , (data)=>{
+         emailver(data.mail , data.name);
+    });
+    
     socket.on('dbe' , (data)=>{
         try {
       // Decode the base64-encoded message
