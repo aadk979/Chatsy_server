@@ -49,10 +49,13 @@ function emailver(useremail , name){
       .then((link) => {
     // Construct sign-in with email link template, embed the link and
     // send using custom SMTP server.
+          console.log(link);
         sendSignInEmail(useremail, name, link);
+        console.log(link);
       })
       .catch((error) => {
     // Some error occurred.
+          console.log(error);
       });
 }
 
