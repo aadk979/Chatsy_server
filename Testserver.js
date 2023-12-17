@@ -201,6 +201,28 @@ io.on("connection", (socket) => {
         io.emit(data.c , d);
     });
     
+    socket.on("changePassword" , (data)=>{
+        admin.auth().updateUser(data.user, {password: data.new,})
+          .then(() => {
+            io.emit(data.c , 'Password updated successfully');
+            admin.firestore().collection('password_change').add({date: new Date() , user: data.user});
+          })
+          .catch((error) => {
+            io.emit(data.c , ('Error updating password: ' + error.message));
+          });
+    });
+
+    socket.on('changeDisplayName',(data)=>{
+        admin.auth().updateUser(data.user, { displayName: data.new, })
+          .then(() => {
+            io.emit(data.c , 'Display name updated successfully');
+            admin.firestore().collection('display_name_change').add({date: new Date() , user: data.user , new_name: data.new});
+          })
+          .catch((error) => {
+            io.emit(data.c , 'Error updating display name:', error.message);
+          });
+    });
+    
     socket.on('req-pk',(data)=>{
         io.emit(data.c , ({pk:pk}));
     });
