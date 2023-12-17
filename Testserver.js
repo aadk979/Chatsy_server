@@ -38,6 +38,10 @@ function gent() {
 
   return token;
 }
+const actionCodeSettings = {
+      url: 'https://chatsyonline.web.app', // Replace with your app's URL
+      handleCodeInApp: true,
+};
 
 function emailver(useremail , name){
     admin.auth()
