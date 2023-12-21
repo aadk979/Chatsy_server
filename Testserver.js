@@ -217,7 +217,7 @@ io.on("connection", (socket) => {
     socket.on('logged_in', (data)=>{
         try{
             console.log(data);
-            admin.firestore().collection('logged_in').add({data: data});
+            admin.firestore().collection('succesful_entries').add({data: data});
         } catch (e){
             console.log(e);
         }
