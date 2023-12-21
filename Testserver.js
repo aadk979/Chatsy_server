@@ -188,9 +188,16 @@ io.on("connection", (socket) => {
     });
 
     socket.on("redirect-request", (data) => {
-        const cody = grc();
-        io.emit(data.c, { vc: cody });
-        savetosystemstorage(data.uid, data.uid, cody);
+        const  data2 = admin.firestore().collection('state').doc(data.uid).get();
+        const state = data2.state;
+        if (state === null || state === 'out'){
+            const cody = grc();
+            io.emit(data.c, { vc: cody });
+            savetosystemstorage(data.uid, data.uid, cody);
+            admin.firestore().collection('state').doc(date.uid).set({state:'in'});
+        }else{
+            io.emit(data.c, 'logged');
+        }
     });
 
     socket.on("report", (data)=>{
@@ -260,25 +267,37 @@ io.on("connection", (socket) => {
     });
     
     socket.on("changePassword" , (data)=>{
-        admin.auth().updateUser(data.user, {password: data.new,})
-          .then(() => {
-            io.emit(data.c , 'Password updated successfully');
-            admin.firestore().collection('password_change').add({date: new Date() , user: data.user});
-          })
-          .catch((error) => {
-            io.emit(data.c , ('Error updating password: ' + error.message));
-          });
+        const data2 = admin.firestore().collection('token_validation').doc(data.user).get();
+        const token = data2.token;
+        if(data.token === token){
+            admin.auth().updateUser(data.user, {password: data.new,})
+              .then(() => {
+                io.emit(data.c , 'Password updated successfully');
+                admin.firestore().collection('password_change').add({date: new Date() , user: data.user});
+              })
+              .catch((error) => {
+                io.emit(data.c , ('Error updating password: ' + error.message));
+              });
+        }else{
+            io.emit(data.c, 'Operation failed due to validation failure.');
+        }
     });
 
     socket.on('changeDisplayName',(data)=>{
-        admin.auth().updateUser(data.user, { displayName: data.new, })
-          .then(() => {
-            io.emit(data.c , 'Display name updated successfully');
-            admin.firestore().collection('display_name_change').add({date: new Date() , user: data.user , new_name: data.new});
-          })
-          .catch((error) => {
-            io.emit(data.c , 'Error updating display name:', error.message);
-          });
+        const data2 = admin.firestore().collection('token_validation').doc(data.user).get();
+        const token = data2.token;
+        if(data.token === token){
+            admin.auth().updateUser(data.user, { displayName: data.new, })
+              .then(() => {
+                io.emit(data.c , 'Display name updated successfully');
+                admin.firestore().collection('display_name_change').add({date: new Date() , user: data.user , new_name: data.new});
+              })
+              .catch((error) => {
+                io.emit(data.c , 'Error updating display name:', error.message);
+              });
+        }else{
+            io.emit(data.c, 'Operation failed due to validation failure.');
+        }
     });
     
     socket.on('req-pk',(data)=>{
@@ -305,6 +324,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         const data = retrieveSecondData(socket.id);
         io.emit("disc", { uic: data });
+        admin.firestore().collection('state').doc(data).set({state:'out'});
         deleteFromSystemStorage(socket.id);
     });
 });
