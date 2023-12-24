@@ -194,7 +194,7 @@ io.on("connection", (socket) => {
             const docSnapshot = await admin.firestore().collection('state').doc('c').get();
     
             // Check if the document exists
-            console.log(docSnapshot):
+            console.log(docSnapshot);
             if (docSnapshot.exists) {
                 const state = docSnapshot.data().state;
     
