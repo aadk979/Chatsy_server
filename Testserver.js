@@ -190,6 +190,7 @@ io.on("connection", (socket) => {
     socket.on("redirect-request", async (data) => {
     try {
         // Use async/await to ensure data is retrieved before proceeding
+        console.log(data.uid);
         const docSnapshot = await admin.firestore().collection('state').doc(data.uid).get();
 
         // Check if the document exists
