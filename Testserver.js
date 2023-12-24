@@ -188,37 +188,37 @@ io.on("connection", (socket) => {
     });
 
     socket.on("redirect-request", async (data) => {
-    try {
-        // Use async/await to ensure data is retrieved before proceeding
-        console.log(data.uid);
-        const docSnapshot = await admin.firestore().collection('state').doc(data.uid).get();
-
-        // Check if the document exists
-        if (docSnapshot.exists) {
-            const state = docSnapshot.data().state;
-
-            // Check the state and respond accordingly
-            if (state === null || state === 'out') {
-                const cody = generateRandomCode();
-                io.emit(data.c, { vc: cody });
-                
-                // Save the generated code to system storage
-                savetosystemstorage(data.uid, data.uid, cody);
-
-                // Update the state to 'in'
-                await admin.firestore().collection('state').doc(data.uid).set({ state: 'in' });
+        try {
+            // Use async/await to ensure data is retrieved before proceeding
+            console.log(data.uid);
+            const docSnapshot = await admin.firestore().collection('state').doc(data.uid).get();
+    
+            // Check if the document exists
+            if (docSnapshot.exists) {
+                const state = docSnapshot.data().state;
+    
+                // Check the state and respond accordingly
+                if (state === null || state === 'out') {
+                    const cody = grc();
+                    io.emit(data.c, { vc: cody });
+                    
+                    // Save the generated code to system storage
+                    savetosystemstorage(data.uid, data.uid, cody);
+    
+                    // Update the state to 'in'
+                    await admin.firestore().collection('state').doc(data.uid).set({ state: 'in' });
+                } else {
+                    io.emit(data.c, 'logged');
+                }
             } else {
-                io.emit(data.c, 'logged');
+                // Document doesn't exist, handle accordingly (set state as null, for example)
+                await admin.firestore().collection('state').doc(data.uid).set({ state: null });
             }
-        } else {
-            // Document doesn't exist, handle accordingly (set state as null, for example)
-            await admin.firestore().collection('state').doc(data.uid).set({ state: null });
+        } catch (error) {
+            console.error("Error:", error.message);
+            // Handle errors appropriately (log, emit an error event, etc.)
         }
-    } catch (error) {
-        console.error("Error:", error.message);
-        // Handle errors appropriately (log, emit an error event, etc.)
-    }
-});
+    });
 
 
     socket.on("report", (data)=>{
