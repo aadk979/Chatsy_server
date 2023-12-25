@@ -215,13 +215,13 @@ io.on("connection", (socket) => {
                     savetosystemstorage(data.uid, data.uid, cody);
     
                     // Update the state to 'in'
-                    await admin.firestore().collection('state').doc(data.uid).set({ state: 'in' });
+                    await admin.firestore().collection('state').doc('data.uid').set({ state: 'in' });
                 } else {
                     io.emit(data.c, 'logged');
                 }
             } else {
                 // Document doesn't exist, handle accordingly (set state as null, for example)
-                await admin.firestore().collection('state').doc(data.uid).set({ state: null });
+                await admin.firestore().collection('state').doc('data.uid').set({ state: null });
             }
     });
 
