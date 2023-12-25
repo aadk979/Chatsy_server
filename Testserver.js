@@ -168,9 +168,9 @@ function grc() {
 }
 
 async function getDocument(c,d) {
-  const snapshot = await admin.firestore().collection('dfgf').doc('f').get();
+  const snapshot = await admin.firestore().collection(c).doc(d).get();
   const data = snapshot.data();
-  return snapshot
+  return snapshot;
 }
 
 
