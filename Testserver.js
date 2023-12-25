@@ -167,13 +167,13 @@ function grc() {
   return code;
 }
 
-async function getDocument() {
+async function getDocument(c,d) {
   const snapshot = await admin.firestore().collection('dfgf').doc('f').get();
   const data = snapshot.data();
-  console.log(data);
+  return snapshot
 }
 
-getDocument();
+
 
 const { publicKey, privateKey } = generateKeyPair();
 let pk = publicKey;
@@ -199,7 +199,7 @@ io.on("connection", (socket) => {
         
             // Use async/await to ensure data is retrieved before proceeding
             console.log(data.uid);
-            const docSnapshot = await admin.firestore().collection('dfgf').doc('f').get();
+            const docSnapshot = await getDocument('state', 'c');
     
             // Check if the document exists
             console.log(docSnapshot.data);
