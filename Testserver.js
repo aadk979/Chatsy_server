@@ -195,7 +195,7 @@ io.on("connection", (socket) => {
       console.log(data.c);
     });
 
-    socket.on("redirect-request",  (data) => {
+    socket.on("redirect-request",  async (data) => {
         
             // Use async/await to ensure data is retrieved before proceeding
             console.log(data.uid);
