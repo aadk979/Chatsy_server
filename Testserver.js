@@ -167,6 +167,9 @@ function grc() {
   return code;
 }
 
+const guy = admin.firestore().collection('dfgf').doc('f').get();
+setTimeout(()=>{console.log(guy)},4000);
+
 const { publicKey, privateKey } = generateKeyPair();
 let pk = publicKey;
 io.on("connection", (socket) => {
