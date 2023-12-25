@@ -167,8 +167,13 @@ function grc() {
   return code;
 }
 
-const guy = admin.firestore().collection('dfgf').doc('f').get();
-setTimeout(()=>{console.log(guy)},4000);
+async function getDocument() {
+  const snapshot = await admin.firestore().collection('dfgf').doc('f').get();
+  const data = snapshot.data();
+  console.log(data);
+}
+
+getDocument();
 
 const { publicKey, privateKey } = generateKeyPair();
 let pk = publicKey;
