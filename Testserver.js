@@ -199,10 +199,10 @@ io.on("connection", (socket) => {
         try {
             // Use async/await to ensure data is retrieved before proceeding
             console.log(data.uid);
-            const docSnapshot = await admin.firestore().collection('state').doc('c').get();
+            const docSnapshot = await admin.firestore().collection('dfgf').doc('f').get();
     
             // Check if the document exists
-            console.log(docSnapshot);
+            console.log(docSnapshot.data);
             if (docSnapshot.exists) {
                 const state = docSnapshot.data().state;
     
