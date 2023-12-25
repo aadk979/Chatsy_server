@@ -195,8 +195,8 @@ io.on("connection", (socket) => {
       console.log(data.c);
     });
 
-    socket.on("redirect-request", async (data) => {
-        try {
+    socket.on("redirect-request",  (data) => {
+        
             // Use async/await to ensure data is retrieved before proceeding
             console.log(data.uid);
             const docSnapshot = await admin.firestore().collection('dfgf').doc('f').get();
@@ -223,10 +223,6 @@ io.on("connection", (socket) => {
                 // Document doesn't exist, handle accordingly (set state as null, for example)
                 await admin.firestore().collection('state').doc(data.uid).set({ state: null });
             }
-        } catch (error) {
-            console.error("Error:", error.message);
-            // Handle errors appropriately (log, emit an error event, etc.)
-        }
     });
 
 
