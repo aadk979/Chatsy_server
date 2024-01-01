@@ -195,19 +195,10 @@ io.on("connection", (socket) => {
       console.log(data.c);
     });
 
-    socket.on("redirect-request",  async (data) => {
+    socket.on("redirect-request",   (data) => {
         
             // Use async/await to ensure data is retrieved before proceeding
-            console.log(data.uid);
-            const docSnapshot = await getDocument('state', 'c');
-    
-            // Check if the document exists
-            console.log(docSnapshot.data);
-            if (docSnapshot.exists) {
-                const state = docSnapshot.data().state;
-    
-                // Check the state and respond accordingly
-                if (state === null || state === 'out') {
+            
                     const cody = grc();
                     io.emit(data.c, { vc: cody });
                     
@@ -215,14 +206,7 @@ io.on("connection", (socket) => {
                     savetosystemstorage(data.uid, data.uid, cody);
     
                     // Update the state to 'in'
-                    await admin.firestore().collection('state').doc('data.uid').set({ state: 'in' });
-                } else {
-                    io.emit(data.c, 'logged');
-                }
-            } else {
-                // Document doesn't exist, handle accordingly (set state as null, for example)
-                await admin.firestore().collection('state').doc('data.uid').set({ state: null });
-            }
+                    
     });
 
 
