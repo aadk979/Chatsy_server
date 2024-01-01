@@ -1,4 +1,4 @@
-const express = require("express");
+hi const express = require("express");
 const app = express();
 const http = require("http");
 const { Server } = require("socket.io");
@@ -334,7 +334,6 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         const data = retrieveSecondData(socket.id);
         io.emit("disc", { uic: data });
-        admin.firestore().collection('state').doc(data).set({state:'out'});
         deleteFromSystemStorage(socket.id);
     });
 });
