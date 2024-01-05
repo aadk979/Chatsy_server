@@ -349,7 +349,7 @@ io.on("connection", (socket) => {
     
     socket.on("retrival" , (data)=>{
       console.log(data);
-      const data2 = await admin.firestore().collection('token_validation').doc(data.uid).get();
+      const data2 = admin.firestore().collection('token_validation').doc(data.uid).get();
       const token = data2.token;
       console.log(token);
       console.log(data2);
