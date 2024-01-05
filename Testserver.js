@@ -355,7 +355,7 @@ io.on("connection", (socket) => {
       	console.log(data2);
       	if(data.token === token ){
       		const send = admin.firestore().collection("retrival").doc(data.uid).get();
-        	io.emit(data.code,(send));
+        	io.emit(data.code,(send.data()));
       	}else{
        		console.log('req rejected');
       	}
