@@ -350,7 +350,7 @@ io.on("connection", (socket) => {
     socket.on("retrival" , (data)=>{
       console.log(data);
       admin.firestore().collection('token_validation').doc(data.uid).get().then((data2)=>{
-        const token = data2.token;
+        const token = data2.token.stringValue;
       	console.log(token);
       	console.log(data2);
       	if(data.token === token ){
