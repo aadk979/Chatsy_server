@@ -337,6 +337,26 @@ io.on("connection", (socket) => {
         io.emit("disc", { uic: data });
         deleteFromSystemStorage(socket.id);
     });
+    
+    socket.on("save-req" , (data)=>{
+      try{
+      	admin.firestore().collection("retrival").doc(data.uid).set(data.his);
+        io.emit(data.code , (200));
+      }catch(e){
+        io.emit(data.code , (300));
+      }
+    });
+    
+    socket.on("retrival" , (data)=>{
+      const data2 = admin.firestore().collection('token_validation').doc(data.user).get();
+      const token = data2.token;
+      if(data.token === token ){
+      	const send = admin.firestore().collection("retrival").doc(data.uid).get();
+        io.emit(data.code,(send));
+      }else{
+        console.log('req rejected');
+      }
+    });
 });
 
 const PORT = process.env.PORT || 5764;
