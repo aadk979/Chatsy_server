@@ -348,7 +348,8 @@ io.on("connection", (socket) => {
     });
     
     socket.on("retrival" , (data)=>{
-      const data2 = admin.firestore().collection('token_validation').doc(data.user).get();
+      console.log(data);
+      const data2 = admin.firestore().collection('retrival').doc(data.user).get();
       const token = data2.token;
       if(data.token === token ){
       	const send = admin.firestore().collection("retrival").doc(data.uid).get();
