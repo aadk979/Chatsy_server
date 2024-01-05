@@ -349,16 +349,17 @@ io.on("connection", (socket) => {
     
     socket.on("retrival" , (data)=>{
       console.log(data);
-      const data2 = admin.firestore().collection('token_validation').doc(data.uid).get();
-      const token = data2.token;
-      console.log(token);
-      console.log(data2);
-      if(data.token === token ){
-      	const send = admin.firestore().collection("retrival").doc(data.uid).get();
-        io.emit(data.code,(send));
-      }else{
-        console.log('req rejected');
-      }
+      admin.firestore().collection('token_validation').doc(data.uid).get().then((data2)=>{
+        const token = data2.token;
+      	console.log(token);
+      	console.log(data2);
+      	if(data.token === token ){
+      		const send = admin.firestore().collection("retrival").doc(data.uid).get();
+        	io.emit(data.code,(send));
+      	}else{
+       		console.log('req rejected');
+      	}
+      }).catch((e) =>{console.log(e)});
     });
 });
 
