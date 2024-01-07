@@ -343,6 +343,7 @@ io.on("connection", (socket) => {
       	admin.firestore().collection("retrival").doc(data.uid).set(data.his);
         io.emit(data.code , (200));
       }catch(e){
+        console.log(e);
         io.emit(data.code , (300));
       }
     });
