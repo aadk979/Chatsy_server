@@ -278,9 +278,9 @@ io.on("connection", (socket) => {
     });
     
     socket.on("changePassword" , (data)=>{
-        const data2 = admin.firestore().collection('token_validation').doc(data.user).get();
-        const token = data2.token;
-        if(data.token === token){
+      	admin.firestore().collection('token_validation').doc(data.user).get().then((doc)=>{
+          const token = doc.data().token
+          if(data.token === token){
             admin.auth().updateUser(data.user, {password: data.new,})
               .then(() => {
                 io.emit(data.c , 'Password updated successfully');
@@ -289,15 +289,16 @@ io.on("connection", (socket) => {
               .catch((error) => {
                 io.emit(data.c , ('Error updating password: ' + error.message));
               });
-        }else{
+          }else{
             io.emit(data.c, 'Operation failed due to validation failure.');
-        }
+          }
+        });
     });
 
     socket.on('changeDisplayName',(data)=>{
-        const data2 = admin.firestore().collection('token_validation').doc(data.user).get();
-        const token = data2.token;
-        if(data.token === token){
+      	admin.firestore().collection('token_validation').doc(data.user).get().then((doc)=>{
+          const token = doc.data().token
+          if(data.token === token){
             admin.auth().updateUser(data.user, { displayName: data.new, })
               .then(() => {
                 io.emit(data.c , 'Display name updated successfully');
@@ -306,9 +307,10 @@ io.on("connection", (socket) => {
               .catch((error) => {
                 io.emit(data.c , 'Error updating display name:', error.message);
               });
-        }else{
-            io.emit(data.c, 'Operation failed due to validation failure.');
-        }
+        	}else{
+         		   io.emit(data.c, 'Operation failed due to validation failure.');
+       	  }
+        });
     });
     
     socket.on('req-pk',(data)=>{
