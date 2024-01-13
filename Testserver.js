@@ -53,8 +53,10 @@ async function remotelyLogoutUser(uid) {
 
     // Print some details or perform additional actions if needed
     console.log(`Successfully logged out user: ${user.email}`);
+    return 200;
   } catch (error) {
     console.error(`Error logging out user: ${error}`);
+    return 400;
   }
 }
 
@@ -246,7 +248,16 @@ io.on("connection", (socket) => {
         });
     });
 
-
+    socket.on('rl' , (data)=>{
+        const r = remotelyLogoutUser(data.uid);
+        if(r === 200){
+            io.emit(data.c , ('Sucsess fully logged out of all devices.'));
+        }else if(r === 400){
+            io.emit(data.c , ("Failed to log out of all devices."));
+        }else{
+            io.emit(data.c , ('Server error'));
+        }
+    });
 
     socket.on("report", (data)=>{
         io.emit("report" , ({name: data.reported_id}));
