@@ -198,16 +198,17 @@ io.on("connection", (socket) => {
     socket.on("redirect-request",   (data) => {
         admin.firestore().collection('state').doc(data.uid).get().then((doc)=>{
             const state = doc.data();
-            const state2 = state.state;
-            if(state2 === 'out'){
-                const cody = grc();
-                io.emit(data.c, { vc: cody });
-                    
-                    // Save the generated code to system storage
-                savetosystemstorage(data.uid, data.uid, cody);
-                admin.firestore().collection('state').doc(data.uid).set({state: 'in'});
-            }else if(state2 === 'in'){
-                io.emit(data.c, ('logged'));
+            if(doc.exists){
+                    const state2 = state.state;
+                    if(state2 === 'out'){
+                        const cody = grc();
+                        io.emit(data.c, { vc: cody });
+                            
+                            // Save the generated code to system storage
+                        savetosystemstorage(data.uid, data.uid, cody);
+                        admin.firestore().collection('state').doc(data.uid).set({state: 'in'});
+                    }else if(state2 === 'in'){
+                        io.emit(data.c, ('logged')); 
             }else{
                 io.emit(data.c, ('Error'));
             }
