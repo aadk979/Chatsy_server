@@ -196,14 +196,26 @@ io.on("connection", (socket) => {
     });
 
     socket.on("redirect-request",   (data) => {
+        admin.firestore().collection('state').doc(data.uid).get().then((doc)=>{
+            const state = doc.data();
+            const state2 = state.state;
+            if(state2 === 'out'){
+                const cody = grc();
+                io.emit(data.c, { vc: cody });
+                    
+                    // Save the generated code to system storage
+                savetosystemstorage(data.uid, data.uid, cody);
+                admin.firestore().collection('state').doc(data.uid).set({state: 'in'});
+            }else if(state2 === 'in'){
+                io.emit(data.c, ('logged'));
+            }else{
+                io.emit(data.c, ('Error'));
+            }
+        })
         
             // Use async/await to ensure data is retrieved before proceeding
             
-                    const cody = grc();
-                    io.emit(data.c, { vc: cody });
                     
-                    // Save the generated code to system storage
-                    savetosystemstorage(data.uid, data.uid, cody);
     
                     // Update the state to 'in'
                     
@@ -337,6 +349,7 @@ io.on("connection", (socket) => {
     socket.on("disconnect", () => {
         const data = retrieveSecondData(socket.id);
         io.emit("disc", { uic: data });
+        admin.firestore().collection('state').doc(data).set({state: 'out'});
         deleteFromSystemStorage(socket.id);
     });
     
