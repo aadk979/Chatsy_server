@@ -195,32 +195,42 @@ io.on("connection", (socket) => {
       console.log(data.c);
     });
 
-    socket.on("redirect-request",   (data) => {
-        admin.firestore().collection('state').doc(data.uid).get().then((doc)=>{
-            const state = doc.data();
-            if(doc.exists){
-                    const state2 = state.state;
-                    if(state2 === 'out'){
-                        const cody = grc();
-                        io.emit(data.c, { vc: cody });
-                            
-                            // Save the generated code to system storage
-                        savetosystemstorage(data.uid, data.uid, cody);
-                        admin.firestore().collection('state').doc(data.uid).set({state: 'in'});
-                    }else if(state2 === 'in'){
-                        io.emit(data.c, ('logged')); 
-            }else{
-                io.emit(data.c, ('Error'));
-            }
-        })
-        
-            // Use async/await to ensure data is retrieved before proceeding
-            
-                    
+    socket.on("redirect-request", (data) => {
+        const userDocRef = admin.firestore().collection('state').doc(data.uid);
     
-                    // Update the state to 'in'
-                    
+        userDocRef.get().then((doc) => {
+            if (doc.exists) {
+                const state = doc.data();
+                const state2 = state.state;
+    
+                if (state2 === 'out') {
+                    const cody = grc();
+                    io.emit(data.c, { vc: cody });
+    
+                    // Save the generated code to system storage
+                    savetosystemstorage(data.uid, data.uid, cody);
+                    userDocRef.set({ state: 'in' }, { merge: true }); // Use merge to not overwrite the existing data
+                } else if (state2 === 'in') {
+                    io.emit(data.c, ('logged'));
+                } else {
+                    io.emit(data.c, ('Error'));
+                }
+            } else {
+                // User is new, create a new document
+                const cody = grc();
+                io.emit(data.c, { vc: cody });
+    
+                // Save the generated code to system storage
+                savetosystemstorage(data.uid, data.uid, cody);
+    
+                userDocRef.set({ state: 'in' }); // Set initial state for the new user
+            }
+        }).catch((error) => {
+            console.error("Error getting document:", error);
+            io.emit(data.c, ('Error'));
+        });
     });
+
 
 
     socket.on("report", (data)=>{
