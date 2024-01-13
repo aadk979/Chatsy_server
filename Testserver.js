@@ -43,6 +43,21 @@ const actionCodeSettings = {
       handleCodeInApp: true,
 };
 
+async function remotelyLogoutUser(uid) {
+  try {
+    // Revoke the user's refresh tokens
+    await admin.auth().revokeRefreshTokens(uid);
+
+    // Get the user to verify if the refresh tokens were revoked
+    const user = await admin.auth().getUser(uid);
+
+    // Print some details or perform additional actions if needed
+    console.log(`Successfully logged out user: ${user.email}`);
+  } catch (error) {
+    console.error(`Error logging out user: ${error}`);
+  }
+}
+
 async function disableUser(userEmail) {
   try {
     // Get the user record by email
