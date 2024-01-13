@@ -359,9 +359,11 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         const data = retrieveSecondData(socket.id);
-        io.emit("disc", { uic: data });
-        admin.firestore().collection('state').doc(data).set({state: 'out'});
-        deleteFromSystemStorage(socket.id);
+        if(data !== null){
+            io.emit("disc", { uic: data });
+            admin.firestore().collection('state').doc(data).set({state: 'out'});
+            deleteFromSystemStorage(socket.id);
+        }
     });
     
     socket.on("save-req" , (data)=>{
