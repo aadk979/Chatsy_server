@@ -249,14 +249,15 @@ io.on("connection", (socket) => {
     });
 
     socket.on('rl' , (data)=>{
-        const r = remotelyLogoutUser(data.uid);
-        if(r === 200){
+        remotelyLogoutUser(data.uid).then((r)=>{
+           if(r === 200){
             io.emit(data.c , ('Sucsess fully logged out of all devices.'));
-        }else if(r === 400){
-            io.emit(data.c , ("Failed to log out of all devices."));
-        }else{
-            io.emit(data.c , ('Server error'));
-        }
+            }else if(r === 400){
+                io.emit(data.c , ("Failed to log out of all devices."));
+            }else{
+                io.emit(data.c , ('Server error'));
+            } 
+        })
     });
 
     socket.on("report", (data)=>{
