@@ -250,8 +250,10 @@ io.on("connection", (socket) => {
 
     socket.on('rl' , (data)=>{
         remotelyLogoutUser(data.uid).then((r)=>{
-           if(r === 200){
-            io.emit(data.c , ('Sucsess fully logged out of all devices.'));
+            if(r === 200){
+                io.emit((data.uid + 'logout') , (data.uid));
+                admin.firestore().collection('state').doc(data).set({state: 'out'});
+                io.emit(data.c , ('Sucsess fully logged out of all devices.'));
             }else if(r === 400){
                 io.emit(data.c , ("Failed to log out of all devices."));
             }else{
