@@ -198,6 +198,8 @@ io.on("connection", (socket) => {
     console.log("com");
     
     socket.on("val", (data) => {
+      console.log(data.val);
+      console.log(retrieveSecondData(data.uic));
     	if (retrieveSecondData(data.uic) === data.val) {
      	 io.emit(data.id, "valid");
        deleteFromSystemStorage(data.uic);
