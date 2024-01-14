@@ -420,7 +420,7 @@ io.on("connection", (socket) => {
 
     socket.on('retrival-key' , (data)=>{
         admin.firestore().collection('masterkey').doc(data.uid).get().then((doc)=>{
-            if(doc.exist){
+            if(doc.exists){
                 const x = doc.data();
                 const xx = x.mk;
                 io.emit(data.code , xx);
