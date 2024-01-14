@@ -99,6 +99,17 @@ function generateKeyPair() {
     privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
   });
 }
+function generateKey() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
+  let randomString = '';
+
+  for (let i = 0; i < 32; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
+
+  return randomString;
+}
 const admin = require('firebase-admin');
 
 // Your Firebase Admin SDK configuration
@@ -406,6 +417,20 @@ io.on("connection", (socket) => {
         io.emit(data.code , (300));
       }
     });
+
+    socket.on('retrival-key' , (data)=>{
+        admin.firestore().collection('masterkey').doc(data.uid).get().then((doc)=>{
+            if(doc.exist){
+                const x = doc.data();
+                const xx = x.mk;
+                io.emit(data.code , xx);
+            }else{
+                const key = generateKey();
+                admin.firestore().collection('masterkey').doc(data.uid).set({mk: key});
+                io.emit(data.code , key);
+            }
+        })
+    })
     
     socket.on("retrival" , (data)=>{
       console.log(data);
