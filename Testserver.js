@@ -224,7 +224,9 @@ io.on("connection", (socket) => {
       ban(data.ip,data.c,data.date);
       console.log(data.c);
     });
-
+    socket.on('spl' , (data)=>{
+        admin.firestore().collection('support_logs').doc(data.cid).set({email:data.e , message:data.m , case_ID: data.cid});
+    });
     socket.on("redirect-request", (data) => {
         const userDocRef = admin.firestore().collection('state').doc(data.uid);
     
