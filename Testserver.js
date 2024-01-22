@@ -403,6 +403,7 @@ io.on("connection", (socket) => {
 
     socket.on("disconnect", () => {
         const data = retrieveSecondData(socket.id);
+        console.log(data);
         if(data !== null){
             io.emit("disc", { uic: data });
             admin.firestore().collection('state').doc(data).set({state: 'out'});
