@@ -43,6 +43,22 @@ const actionCodeSettings = {
       handleCodeInApp: true,
 };
 
+async function checko(uid, oldPassword) {
+  try {
+    const user = await admin.auth().getUser(uid);
+
+    // Use Firebase Auth to reauthenticate the user
+    const credentials = admin.auth.AuthCredential.fromEmailAndPassword(user.email, oldPassword);
+    await admin.auth().reauthenticateWithCredential(uid, credentials);
+
+    // Reauthentication successful, old password is correct
+    return true;
+  } catch (error) {
+    // Reauthentication failed, old password is incorrect
+    return false;
+  }
+}
+
 async function remotelyLogoutUser(uid) {
   try {
     // Revoke the user's refresh tokens
@@ -345,20 +361,27 @@ io.on("connection", (socket) => {
     });
     
     socket.on("changePassword" , (data)=>{
-      	admin.firestore().collection('token_validation').doc(data.user).get().then((doc)=>{
-          const token = doc.data().token
-          if(data.token === token){
-            admin.auth().updateUser(data.user, {password: data.new,})
-              .then(() => {
-                io.emit(data.c , 'Password updated successfully');
-                admin.firestore().collection('password_change').add({date: new Date() , user: data.user});
-              })
-              .catch((error) => {
-                io.emit(data.c , ('Error updating password: ' + error.message));
-              });
-          }else{
-            io.emit(data.c, 'Operation failed due to validation failure.');
-          }
+        checko(data.user , data.oldp).then((t)=>{
+            if(t === true){
+                admin.firestore().collection('token_validation').doc(data.user).get().then((doc)=>{
+                  const token = doc.data().token
+                  if(data.token === token){
+                    admin.auth().updateUser(data.user, {password: data.new,})
+                      .then(() => {
+                        io.emit(data.c , 'Password updated successfully');
+                        admin.firestore().collection('password_change').add({date: new Date() , user: data.user});
+                      })
+                      .catch((error) => {
+                        io.emit(data.c , ('Error updating password: ' + error.message));
+                      });
+                  }else{
+                    io.emit(data.c, 'Operation failed due to validation failure.');
+                  }
+                });
+            }else{
+                io.emit(data.c, "We noticed that there was an issue with the old password. If you happen to forget your old password, feel free to log out and click on the Forgot Password option on the login page. We're here to help!");
+
+            }
         });
     });
 
