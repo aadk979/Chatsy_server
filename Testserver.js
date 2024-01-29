@@ -7,8 +7,7 @@ const server = http.createServer(app);
 const crypto = require('crypto');
 const io = new Server(server, {
     cors: {
-        origin: '*',
-        //origin: ["https://chatsy-entry.netlify.app" , "https://chatsy-chat.netlify.app" , "https://official-entry-point.development98979.repl.co" , "https://chatsyonline.web.app"],
+        origin: ["https://chatsy2.web.app"],
         methods: ["GET", "POST"]
     }
 });
