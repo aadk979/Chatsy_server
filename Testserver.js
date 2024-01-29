@@ -13,18 +13,6 @@ const io = new Server(server, {
     }
 });
 
-app.get('/config', (req, res) => {
-  const data = {
-      apiKey: "AIzaSyA2SNQrb5cGZAaiiNruy1UJTkd1yjcfMLM",
-      authDomain: "chatsy-2fb9e.firebaseapp.com",
-      projectId: "chatsy-2fb9e",
-      storageBucket: "chatsy-2fb9e.appspot.com",
-      messagingSenderId: "165871265730",
-      appId: "1:165871265730:web:00ded799d3a116cc22985b",
-      measurementId: "G-H79M3WV8Z7"
-  };
-  res.json(data);
-});
 
 function gent() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -92,29 +80,7 @@ async function disableUser(userEmail) {
   }
 }
 
-function emailver(useremail , name){
-    admin.auth()
-      .generateSignInWithEmailLink(useremail, actionCodeSettings)
-      .then((link) => {
-    // Construct sign-in with email link template, embed the link and
-    // send using custom SMTP server.
-          console.log(link);
-        sendSignInEmail(useremail, name, link);
-        console.log(link);
-      })
-      .catch((error) => {
-    // Some error occurred.
-          console.log(error);
-      });
-}
 
-function generateKeyPair() {
-  return crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: { type: 'spki', format: 'pem' },
-    privateKeyEncoding: { type: 'pkcs8', format: 'pem' }
-  });
-}
 function generateKey() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?';
   let randomString = '';
@@ -217,10 +183,6 @@ async function getDocument(c,d) {
   return snapshot;
 }
 
-
-
-const { publicKey, privateKey } = generateKeyPair();
-let pk = publicKey;
 io.on("connection", (socket) => {
     console.log("com");
     
@@ -236,10 +198,6 @@ io.on("connection", (socket) => {
     	}
   	});
 
-    socket.on("ban" , (data)=>{
-      ban(data.ip,data.c,data.date);
-      console.log(data.c);
-    });
     socket.on('spl' , (data)=>{
         admin.firestore().collection('support_logs').doc(data.cid).set({email:data.e , message:data.m , case_ID: data.cid});
     });
@@ -339,26 +297,6 @@ io.on("connection", (socket) => {
             });
     });
     
-    socket.on('dbe' , (data)=>{
-        try {
-      // Decode the base64-encoded message
-          const encryptedBuffer = Buffer.from(data.message, 'base64');
-
-      // Decrypt the message using the server's private key
-          const decrypted = crypto.privateDecrypt({ key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING }, encryptedBuffer);
-          const decryptedMessage = decrypted.toString('utf-8');
-
-          console.log('Decrypted Message:', decryptedMessage);
-        } catch (error) {
-          console.error('Decryption error:', error);
-        }
-        admin.firestore().collection('messages').add({data});
-    });
-
-    socket.on('d-req', (data)=>{
-        const d = dec(data.d);
-        io.emit(data.c , d);
-    });
     
     socket.on("changePassword" , (data)=>{
         checko(data.user , data.oldp).then((t)=>{
@@ -403,9 +341,6 @@ io.on("connection", (socket) => {
         });
     });
     
-    socket.on('req-pk',(data)=>{
-        io.emit(data.c , ({pk:pk}));
-    });
     
     socket.on("newuser", (data) => {
         io.emit("newuser", ({uid:data.uid , name:data.name}));
