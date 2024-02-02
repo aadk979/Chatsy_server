@@ -365,6 +365,9 @@ io.on("connection", (socket) => {
             io.emit("disc", { uic: data });
             admin.firestore().collection('state').doc(data).set({state: 'out'});
             deleteFromSystemStorage(socket.id);
+            console.log('logged user disc');
+        }else{
+          console.log('stupid disc');
         }
     });
     
