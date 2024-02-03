@@ -334,8 +334,8 @@ io.on("connection", (socket) => {
               .catch((error) => {
                 io.emit(data.c , 'Error updating display name:', error.message);
               });
-        	}else{
-         		   io.emit(data.c, 'Operation failed due to validation failure.');
+          }else{
+                io.emit(data.c, 'Operation failed due to validation failure.');
        	  }
         });
     });
