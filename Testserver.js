@@ -7,7 +7,7 @@ const server = http.createServer(app);
 const crypto = require('crypto');
 const io = new Server(server, {
     cors: {
-        origin: ["https://chatsy2.web.app"],
+        origin: '*',
         methods: ["GET", "POST"]
     }
 });
