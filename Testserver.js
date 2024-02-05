@@ -302,7 +302,8 @@ io.on("connection", (socket) => {
                 created_by: data.uic,
                 group_name: data.name,
                 key: key,
-                users: [data.uic]
+                users: [data.uic],
+                user_num: 1
             });
             socket.emit(data.code , ({code:co , key: key}));
         }catch(e){
@@ -320,14 +321,17 @@ io.on("connection", (socket) => {
                     const returndata = {
                         name: ddd.group_name,
                         state: 'valid',
-                        key: ddd.key
+                        key: ddd.key,
+                        users: xx,
+                        user_num: ( ddd.user_num + 1)
                     };
                     admin.firestore().collection('groups').doc(data.secret).set({
                         group_code: ddd.group_code,
                         created_by: ddd.created_by,
                         group_name: ddd.group_name,
                         key: ddd.key,
-                        users: xx
+                        users: xx,
+                        user_num :( ddd.user_num + 1)
                     });
                     console.log(returndata);
                     socket.emit(data.code , (returndata));
