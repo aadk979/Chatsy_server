@@ -182,6 +182,19 @@ async function getDocument(c,d) {
   return snapshot;
 }
 
+function gcode() {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()-_=+';
+  let uniqueCode = '';
+
+  for (let i = 0; i < 12; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    uniqueCode += characters.charAt(randomIndex);
+  }
+
+  return uniqueCode;
+}
+
+
 io.on("connection", (socket) => {
     console.log("com");
     
@@ -280,6 +293,40 @@ io.on("connection", (socket) => {
         }
     });
     
+    socket.on('newgroup' , (data)=>{
+        try{
+            const co = gcode();
+            admin.firestore().collection('groups').doc(co).set({
+                group_code: co,
+                created_by: data.uic,
+                group_name: data.name,
+                users: 1
+            });
+            socket.emit(data.code , ({code:co}));
+        }catch(e){
+            socket.emit(data.code , 'error');
+        }
+    });
+
+    socket.on('joingroup' , (data)=>{
+        try{
+            admin.firestore().collection('groups').doc(data.secret).get().then((dd)=>{
+                if(dd.exists){
+                    const ddd = dd.data();
+                    const returndata = {
+                        name: ddd.group_name,
+                        state: 'valid'
+                    };
+                    socket.emit(data.code , (returndata));
+                }else{
+                    socket.emit(data.code , ('invalid'));
+                }
+            });
+        }catch(e){
+            socket.emit(data.code , 'error');
+        }
+    });
+
     socket.on("message", (data) => {
         admin.firestore().collection('token_validation').doc(data.from).get()
             .then(doc =>{
