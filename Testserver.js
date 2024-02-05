@@ -295,14 +295,16 @@ io.on("connection", (socket) => {
     
     socket.on('newgroup' , (data)=>{
         try{
+            const key = generateKey();
             const co = gcode();
             admin.firestore().collection('groups').doc(co).set({
                 group_code: co,
                 created_by: data.uic,
                 group_name: data.name,
-                users: 1
+                key: key,
+                users: [data.uic]
             });
-            socket.emit(data.code , ({code:co}));
+            socket.emit(data.code , ({code:co , key: key}));
         }catch(e){
             socket.emit(data.code , 'error');
         }
@@ -313,10 +315,20 @@ io.on("connection", (socket) => {
             admin.firestore().collection('groups').doc(data.secret).get().then((dd)=>{
                 if(dd.exists){
                     const ddd = dd.data();
+                    const xx = ddd.users;
+                    xx.push(data.uic);
                     const returndata = {
                         name: ddd.group_name,
-                        state: 'valid'
+                        state: 'valid',
+                        key: ddd.key
                     };
+                    admin.firestore().collection('groups').doc(data.secret).set({
+                        group_code: ddd.group_code,
+                        created_by: ddd.created_by,
+                        group_name: ddd.group_name,
+                        key: key,
+                        users: xx
+                    });
                     console.log(returndata);
                     socket.emit(data.code , (returndata));
                 }else{
