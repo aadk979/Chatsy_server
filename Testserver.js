@@ -317,6 +317,7 @@ io.on("connection", (socket) => {
                         name: ddd.group_name,
                         state: 'valid'
                     };
+                    console.log(returndata);
                     socket.emit(data.code , (returndata));
                 }else{
                     socket.emit(data.code , ('invalid'));
