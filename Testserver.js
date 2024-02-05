@@ -326,7 +326,7 @@ io.on("connection", (socket) => {
                         group_code: ddd.group_code,
                         created_by: ddd.created_by,
                         group_name: ddd.group_name,
-                        key: key,
+                        key: ddd.key,
                         users: xx
                     });
                     console.log(returndata);
