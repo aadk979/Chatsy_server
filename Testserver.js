@@ -12,6 +12,28 @@ const io = new Server(server, {
     }
 });
 
+function sendKeepAliveRequest() {
+  const options = {
+    hostname: 'your-server-domain.com', // Replace with your server's domain or IP address
+    port: process.env.PORT, // Replace with your server's port
+    path: '/', // Replace with the endpoint you want to hit for keep-alive
+    method: 'GET'
+  };
+
+  const req = http.request(options, (res) => {
+    console.log(`Keep-alive request status: ${res.statusCode}`);
+  });
+
+  req.on('error', (error) => {
+    console.error('Error sending keep-alive request:', error);
+  });
+
+  req.end();
+}
+
+// Interval to send keep-alive requests (every 10 minutes in this example)
+const keepAliveInterval = 10 * 60 * 1000; // 10 minutes in milliseconds
+setInterval(sendKeepAliveRequest, keepAliveInterval);
 
 function gent() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
