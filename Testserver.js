@@ -347,7 +347,7 @@ io.on("connection", (socket) => {
     
 
     socket.on('groupmessage' , (data)=>{
-        socket.emit('group' , ({to: data.to , m: data.m , t: data.t , from: data.from}));
+        io.emit('group' , ({to: data.to , m: data.m , t: data.t , from: data.from}));
     });
 
     socket.on("message", (data) => {
