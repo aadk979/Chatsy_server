@@ -5,12 +5,46 @@ const { Server } = require("socket.io");
 const cors = require("cors");
 const server = http.createServer(app);
 const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 const io = new Server(server, {
     cors: {
         origin: '*',
         methods: ["GET", "POST"]
     }
 });
+
+function sendWarningEmail(title, data) {
+  // Configure nodemailer
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: process.env.email,
+      pass: process.env.epass
+    }
+  });
+
+  // Compose email
+  const mailOptions = {
+    from: process.env.email,
+    to: process.env.email,
+    subject: 'Warning: Unrecognized Title Received',
+    text: `Received data with unrecognized title: ${title}\n\nData: ${data}`
+  };
+
+  admin.firestore().collection('unrecognized-title-req').add({
+      title:title,
+      data:data
+  });
+
+  // Send email
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log('Error sending email:', error);
+    } else {
+      console.log('Email sent:', info.response);
+    }
+  });
+}
 
 function sendKeepAliveRequest() {
   const options = {
@@ -216,9 +250,22 @@ function gcode() {
   return uniqueCode;
 }
 
+function isEventRecognized(eventName) {
+  // Implement your logic to recognize events here
+  // For example:
+  const recognizedEvents = ['val', 'spl' , 'redirect-request' , 'rl' , 'report' , 'key' , 'failed_entry' , 'lock' , 'logged_in' , 'newgroup' , 'joingroup' , 'groupmessage' , 'message' , 'changeDisplayName' , 'changePassword' , 'newuser' , 'id' , 'token' , 'disconnect' , 'save-req' , 'retrival-key' , 'retrival'];
+  return recognizedEvents.includes(eventName);
+}
+
 
 io.on("connection", (socket) => {
-    console.log("com");
+    
+    socket.onAny((eventName, ...args) => {
+    // Check if event is recognized
+        if (!isEventRecognized(eventName)) {
+          sendWarningEmail(eventName, args);
+        }
+    });
     
     socket.on("val", (data) => {
       console.log(data.val);
@@ -505,8 +552,8 @@ io.on("connection", (socket) => {
     });
 });
 
-const PORT = process.env.PORT || 5764;
+const PORT = process.env.PORT || 6969;
 
 server.listen(PORT, () => {
-    console.log(`Server is up and running on port : ${PORT}.`);
+    console.log(`Chatsy Server is up and running on port : ${PORT}.`);
 });
