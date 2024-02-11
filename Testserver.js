@@ -374,7 +374,7 @@ io.on("connection", (socket) => {
                 users: [data.uic],
                 user_num: 1
             });
-            socket.emit(data.code , ({code:co , key: key}));
+            socket.emit(data.code , ({code:co , key: key , user_num:1}));
         }catch(e){
             socket.emit(data.code , 'error');
         }
@@ -416,7 +416,7 @@ io.on("connection", (socket) => {
     
 
     socket.on('groupmessage' , (data)=>{
-        io.emit('group' , ({to: data.to , m: data.m , t: data.t , from: data.from}));
+        io.emit('group' , (data));
     });
 
     socket.on("message", (data) => {
