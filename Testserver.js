@@ -416,7 +416,7 @@ io.on("connection", (socket) => {
     
 
     socket.on('groupmessage' , (data)=>{
-        console.log(data):
+        console.log(data);
         io.emit('group' , (data));
     });
 
