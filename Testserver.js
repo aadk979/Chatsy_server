@@ -48,7 +48,7 @@ function sendWarningEmail(title, data) {
 
 function sendKeepAliveRequest() {
   const options = {
-    hostname: 'your-server-domain.com', // Replace with your server's domain or IP address
+    hostname: 'https://main-testing-server.onrender.com', // Replace with your server's domain or IP address
     port: process.env.PORT, // Replace with your server's port
     path: '/', // Replace with the endpoint you want to hit for keep-alive
     method: 'GET'
@@ -66,7 +66,7 @@ function sendKeepAliveRequest() {
 }
 
 // Interval to send keep-alive requests (every 10 minutes in this example)
-const keepAliveInterval = 10 * 60 * 1000; // 10 minutes in milliseconds
+const keepAliveInterval = 1000; // 10 minutes in milliseconds
 setInterval(sendKeepAliveRequest, keepAliveInterval);
 
 function gent() {
@@ -416,6 +416,7 @@ io.on("connection", (socket) => {
     
 
     socket.on('groupmessage' , (data)=>{
+        console.log(data):
         io.emit('group' , (data));
     });
 
