@@ -601,8 +601,12 @@ io.on("connection", (socket) => {
     });
 
     socket.on('img-gen' , async (data)=>{
-        const imageBytes = await queryAPI(data.prompt);
-        socket.emit(data.code, (imageBytes));
+        try{
+            const imageBytes = await queryAPI(data.prompt);
+            socket.emit(data.code, (imageBytes));
+        }catch(e){
+            console.log(e);
+        }
     });
     socket.on("val", (data) => {
       console.log(data.val);
