@@ -13,6 +13,8 @@ const io = new Server(server, {
     }
 });
 
+app.use(express.json());
+
 function containsNSFW(text) {
     const nsfwTerms = [
       "adult",
