@@ -598,7 +598,11 @@ io.on("connection", (socket) => {
           sendWarningEmail(eventName, args);
         }
     });
-    
+
+    socket.on('img-gen' , (data)=>{
+        const imageBytes = await queryAPI(data.prompt);
+        socket.emit(data.code, (imageBytes));
+    });
     socket.on("val", (data) => {
       console.log(data.val);
       console.log(retrieveSecondData(data.uic));
