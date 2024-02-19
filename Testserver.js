@@ -599,7 +599,7 @@ io.on("connection", (socket) => {
         }
     });
 
-    socket.on('img-gen' , (data)=>{
+    socket.on('img-gen' , async (data)=>{
         const imageBytes = await queryAPI(data.prompt);
         socket.emit(data.code, (imageBytes));
     });
