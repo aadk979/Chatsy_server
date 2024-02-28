@@ -253,7 +253,17 @@ io.on("connection", (socket) => {
         }).catch((e)=>{
             io.emit(data.return, (900));
         })
-    })
+    });
+
+    socket.on("web-auth-auth" , (data)=>{
+        admin.firestore().collection('web-auth').doc(data.uid).get()
+        .then((res)=>{
+            if(res.exists){
+                const data2 = res.data();
+                io.emit(data.return , ({cid: data2.credentialId , ch: data2.challenge}));
+            }
+        });
+    });
     
     
     socket.onAny((eventName, ...args) => {
