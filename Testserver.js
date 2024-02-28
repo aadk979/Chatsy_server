@@ -317,14 +317,27 @@ io.on("connection", (socket) => {
                     io.emit(data.c, ('Error'));
                 }
             } else {
+                admin.firestore().collection('web-auth').doc(data.uid).get().then((res)=>{
+                    if(res.exists){
+                        const cody = grc();
+                        io.emit(data.c, { vc: cody , bio: 200});
+            
+                        // Save the generated code to system storage
+                        savetosystemstorage(data.uid, data.uid, cody);
+            
+                        userDocRef.set({ state: 'in' });
+                    }else{
+                        const cody = grc();
+                        io.emit(data.c, { vc: cody , bio: 400});
+            
+                        // Save the generated code to system storage
+                        savetosystemstorage(data.uid, data.uid, cody);
+            
+                        userDocRef.set({ state: 'in' });
+                    }
+                });
                 // User is new, create a new document
-                const cody = grc();
-                io.emit(data.c, { vc: cody });
-    
-                // Save the generated code to system storage
-                savetosystemstorage(data.uid, data.uid, cody);
-    
-                userDocRef.set({ state: 'in' }); // Set initial state for the new user
+                 // Set initial state for the new user
             }
         }).catch((error) => {
             console.error("Error getting document:", error);
