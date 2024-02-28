@@ -260,7 +260,7 @@ io.on("connection", (socket) => {
         .then((res)=>{
             if(res.exists){
                 const data2 = res.data();
-                io.emit(data.return , ({cid: data2.credentialId , ch: data2.challenge}));
+                io.emit(data.return , ({cid: data2.credentialID , ch: data2.challenge}));
             }
         });
     });
