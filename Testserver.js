@@ -247,7 +247,7 @@ io.on("connection", (socket) => {
     socket.on('web-auth-setup', (data)=>{
         admin.firestore().collection('web-auth').doc(data.uid).set({
             credentialID: data.credentialID , 
-            challenge: challenge
+            challenge: data.challenge
         }).then(()=>{
             io.emit(data.return, (200));
         }).catch((e)=>{
