@@ -243,6 +243,19 @@ function isEventRecognized(eventName) {
 
 io.on("connection", (socket) => {
     
+
+    socket.on('web-auth-setup', (data)=>{
+        admin.firestore().collection('web-auth').doc(data.uid).set({
+            credentialID: data.credentialID , 
+            challenge: challenge
+        }).then(()=>{
+            io.emit(data.return, (200));
+        }).catch((e)=>{
+            io.emit(data.return, (900));
+        })
+    })
+    
+    
     socket.onAny((eventName, ...args) => {
     // Check if event is recognized
         if (!isEventRecognized(eventName)) {
