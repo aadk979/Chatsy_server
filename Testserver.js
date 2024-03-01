@@ -65,7 +65,7 @@ function sendWarningEmail(title, data) {
 
 function gent() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const tokenLength = 50;
+  const tokenLength = 200;
   let token = '';
 
   for (let i = 0; i < tokenLength; i++) {
