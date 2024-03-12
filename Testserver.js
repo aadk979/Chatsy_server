@@ -250,6 +250,16 @@ function isEventRecognized(eventName) {
 
 io.on("connection", (socket) => {
     
+    socket.on('web-auth-status' , (data)=>{
+        admin.firestore().collection('web-auth').doc(data.uid).get()
+        .then((res)=>{
+            if(res.exists){
+                io.emit(data.return , 'set');
+            }else{
+                io.emit(data.return , 'no-set');
+            }
+        })
+    })
 
     socket.on('web-auth-setup', (data)=>{
         admin.firestore().collection('web-auth').doc(data.uid).set({
@@ -272,14 +282,6 @@ io.on("connection", (socket) => {
         });
     });
     
-    
-    socket.onAny((eventName, ...args) => {
-    // Check if event is recognized
-        if (!isEventRecognized(eventName)) {
-          sendWarningEmail(eventName, args);
-        }
-    });
-
     socket.on('img-gen' , async (data)=>{
         try{
             const imageBytes = await queryAPI(data.prompt);
