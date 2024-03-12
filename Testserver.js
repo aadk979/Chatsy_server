@@ -61,8 +61,6 @@ function sendWarningEmail(title, data) {
   });
 }
 
-
-
 function gent() {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   const tokenLength = 200;
@@ -95,6 +93,15 @@ async function checko(uid, oldPassword) {
     return false;
   }
 }
+
+function generateSixDigitCode() {
+  // Generate a random number between 100000 and 999999
+  const randomNumber = Math.floor(100000 + Math.random() * 900000);
+  // Convert the random number to a string
+  const sixDigitCode = randomNumber.toString();
+  return sixDigitCode;
+}
+
 
 async function remotelyLogoutUser(uid) {
   try {
@@ -407,7 +414,7 @@ io.on("connection", (socket) => {
     socket.on('newgroup' , (data)=>{
         try{
             const key = generateKey();
-            const co = gcode();
+            const co = generateSixDigitCode();
             admin.firestore().collection('groups').doc(co).set({
                 group_code: co,
                 created_by: data.uic,
