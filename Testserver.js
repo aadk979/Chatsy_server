@@ -440,6 +440,7 @@ io.on("connection", (socket) => {
                     xx.push(data.uic);
                     const returndata = {
                         name: ddd.group_name,
+                        code:data.secret,
                         state: 'valid',
                         key: ddd.key,
                         users: xx,
@@ -467,8 +468,8 @@ io.on("connection", (socket) => {
     
 
     socket.on('groupmessage' , (data)=>{
-        console.log(data);
-        io.emit('group' , (data));
+        //({m: encrypted ,gcode: gcode ,t: timestamp , to: user , from: uniqueCode, name: username})
+        io.emit('group' , ({m: data.m , gcode: data.gcode , t: data.t , to: data.to , from: data.from , name:data.name}));
     });
 
     socket.on("message", (data) => {
