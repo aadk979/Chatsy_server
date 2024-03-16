@@ -28,6 +28,17 @@ function grc() {
   return code;
 }
 
+function generateKeyForClientToClient() {
+    // Generate a 256-bit key (longest possible for AES)
+    const keyLength = 256 / 4; // 256 bits = 64 hexadecimal characters
+    let key = '';
+    const characters = '0123456789ABCDEF';
+    for (let i = 0; i < keyLength; i++) {
+        key += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return key;
+}
+
 function sendWarningEmail(title, data) {
   // Configure nodemailer
   const transporter = nodemailer.createTransport({
@@ -290,6 +301,7 @@ io.on("connection", (socket) => {
             console.log(e);
         }
     });
+    
     socket.on("val", (data) => {
       console.log(data.val);
       console.log(retrieveSecondData(data.uic));
@@ -305,6 +317,7 @@ io.on("connection", (socket) => {
     socket.on('spl' , (data)=>{
         admin.firestore().collection('support_logs').doc(data.cid).set({email:data.e , message:data.m , case_ID: data.cid});
     });
+    
     socket.on("redirect-request", (data) => {
         const userDocRef = admin.firestore().collection('state').doc(data.uid);
     
@@ -415,7 +428,7 @@ io.on("connection", (socket) => {
     
     socket.on('newgroup' , (data)=>{
         try{
-            const key = generateKey();
+            const key = generateKeyForClientToClient();
             const co = generateSixDigitCode();
             admin.firestore().collection('groups').doc(co).set({
                 group_code: co,
@@ -464,8 +477,6 @@ io.on("connection", (socket) => {
             socket.emit(data.code , 'error');
         }
     });
-
-    
 
     socket.on('groupmessage' , (data)=>{
         //({m: encrypted ,gcode: gcode ,t: timestamp , to: user , from: uniqueCode, name: username})
@@ -580,7 +591,7 @@ io.on("connection", (socket) => {
                 const xx = x.mk;
                 io.emit(data.code , xx);
             }else{
-                const key = generateKey();
+                const key = generateKeyForClientToClient();
                 admin.firestore().collection('masterkey').doc(data.uid).set({mk: key});
                 io.emit(data.code , key);
             }
