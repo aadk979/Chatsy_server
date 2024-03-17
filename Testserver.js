@@ -267,6 +267,15 @@ io.on("connection", (socket) => {
             if(res.exists){
                 admin.firestore().collection('web-auth').doc(data.uid).delete()
                 .then(()=>{
+                    admin.firestore().collection('token_validation').doc(data.from).get()
+                    .then((res)=>{
+                        if(res.exists){
+                            const data2 = res.data();
+                            io.emit(data.uid+'auth-disabled' , ({token: data2.token}));
+                        }else{
+                            admin.firestore().collection('auth-internal-error').doc(data.uid).set({error: 'token === null , req unresolved!'});
+                        }
+                    });
                     io.emit(data.return , 'Passkey deleted!');
                 })
                 .catch((e)=>{
