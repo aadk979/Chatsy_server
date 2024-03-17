@@ -260,6 +260,23 @@ function isEventRecognized(eventName) {
 
 
 io.on("connection", (socket) => {
+
+    socket.on('web-auth-delete' , (data)=>{
+        admin.firestore().collection('web-auth').doc(data.uid).get()
+        .then((res)=>{
+            if(res.exists){
+                admin.firestore().collection('web-auth').doc(data.uid).delete()
+                .then(()=>{
+                    io.emit(data.return , 'Passkey deleted!');
+                })
+                .catch((e)=>{
+                    io.emit(data.return , 'Failed to delete Passkey!');
+                })
+            }else{
+                io.emit(data.return , 'No Passkey detected , false request!');
+            }
+        })
+    });
     
     socket.on('web-auth-status' , (data)=>{
         admin.firestore().collection('web-auth').doc(data.uid).get()
