@@ -267,7 +267,7 @@ io.on("connection", (socket) => {
             if(res.exists){
                 admin.firestore().collection('web-auth').doc(data.uid).delete()
                 .then(()=>{
-                    admin.firestore().collection('token_validation').doc(data.from).get()
+                    admin.firestore().collection('token_validation').doc(data.uid).get()
                     .then((res)=>{
                         if(res.exists){
                             const data2 = res.data();
