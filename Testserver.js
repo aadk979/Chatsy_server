@@ -277,7 +277,7 @@ io.on("connection", (socket) => {
 
     socket.on('profile-update' , (data)=>{
        const masked = maskEmail(data.email)
-       admin.firestore().collection('profiles').doc(data.uid).set({int:data.int , bio:data.bio , email: masked})
+       admin.firestore().collection('profiles').doc(data.uid).set({int:data.int , bio:data.bio , email: masked , photo:data.photo})
         .then(()=>{
             io.emit(data.return , ({message: 'Profile has been updated!' , type:'notification'}));
         })
@@ -285,6 +285,18 @@ io.on("connection", (socket) => {
             io.emit(data.return , ({message: 'Failed to update profile!' , type:'error'}));
         });
     });
+
+    socket.on("profile-req", (data)=>{
+        admin.firestore().collection("profiles").doc(data.uid).get()
+        .then((res)=>{
+            if(res.exists){
+                const d = res.data();
+                io.emit(data.return,({int:d.int, bio:d.bio ,email:d.email , photo:d.photo});
+            }else{
+                io.emit(data.return,({int:"Null", bio:"Null" ,email: "Null"});
+            }
+        });
+    })
 
     socket.on('web-auth-delete' , (data)=>{
         admin.firestore().collection('web-auth').doc(data.uid).get()
