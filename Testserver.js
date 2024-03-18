@@ -291,9 +291,9 @@ io.on("connection", (socket) => {
         .then((res)=>{
             if(res.exists){
                 const d = res.data();
-                io.emit(data.return,({int:d.int, bio:d.bio ,email:d.email , photo:d.photo});
+                io.emit(data.return,({int:d.int, bio:d.bio ,email:d.email , photo:d.photo}));
             }else{
-                io.emit(data.return,({int:"Null", bio:"Null" ,email: "Null"});
+                io.emit(data.return,({int:"Null", bio:"Null" ,email: "Null"}));
             }
         });
     })
