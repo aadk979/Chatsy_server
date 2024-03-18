@@ -262,8 +262,12 @@ function maskEmail(email) {
   // Split the email into username and domain parts
   const [username, domain] = email.split('@');
   
-  // Replace missing letters in the username with *
-  const maskedUsername = username.replace(/[a-zA-Z]/g, '*');
+  // Get the first and last letters of the username
+  const firstLetter = username.charAt(0);
+  const lastLetter = username.charAt(username.length - 1);
+  
+  // Replace all letters in the middle of the username with *
+  const maskedUsername = firstLetter + '*'.repeat(username.length - 2) + lastLetter;
   
   // Return the masked email
   return maskedUsername + '@' + domain;
