@@ -258,8 +258,29 @@ function isEventRecognized(eventName) {
   return recognizedEvents.includes(eventName);
 }
 
+function maskEmail(email) {
+  // Split the email into username and domain parts
+  const [username, domain] = email.split('@');
+  
+  // Replace missing letters in the username with *
+  const maskedUsername = username.replace(/[a-zA-Z]/g, '*');
+  
+  // Return the masked email
+  return maskedUsername + '@' + domain;
+}
 
 io.on("connection", (socket) => {
+
+    socket.on('profile-update' , (data)=>{
+       const masked = maskEmail(data.email)
+       admin.firestore().collection('profiles').doc(data.uid).set({int:data.int , bio:data.bio , email: masked})
+        .then(()=>{
+            io.emit(data.return , ({message: 'Profile has been updated!' , type:'notification'}));
+        })
+        .catch((e)=>{
+            io.emit(data.return , ({message: 'Failed to update profile!' , type:'error'}));
+        });
+    });
 
     socket.on('web-auth-delete' , (data)=>{
         admin.firestore().collection('web-auth').doc(data.uid).get()
