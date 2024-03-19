@@ -506,7 +506,13 @@ io.on("connection", (socket) => {
         const new_key = generateKeyForClientToClient();
         admin.firestore().collection('session-key').doc(data.uid).set({key: new_key})
         .then(()=>{
-            io.emit(data.return , (new_key));
+            encrypt('hello there potato' , new_key)
+            .then((res)=>{
+                io.emit(data.return , ({key: new_key , m:res}))
+            })
+            .catch((e)=>{
+                console.error(e);
+            });
         })
         .catch((e)=>{
             io.emit(data.return , ('Failed to generate key!'));
