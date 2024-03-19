@@ -273,6 +273,28 @@ function maskEmail(email) {
   return maskedUsername + '@' + domain;
 }
 
+async function encrypt(data, key) {
+    try {
+        const cipher = crypto.createCipher('aes-256-cbc', key);
+        let encryptedText = cipher.update(data, 'utf8', 'hex');
+        encryptedText += cipher.final('hex');
+        return encryptedText;
+    } catch (e) {
+         console.error(e);
+    }
+}
+
+async function decrypt(data, key) {
+    try {
+        const decipher = crypto.createDecipher('aes-256-cbc', key);
+        let decryptedText = decipher.update(data, 'hex', 'utf8');
+        decryptedText += decipher.final('utf8');
+        return decryptedText;
+    } catch (e) {
+        console.error(e);
+    }
+}
+
 io.on("connection", (socket) => {
 
     socket.on('profile-update' , (data)=>{
@@ -354,15 +376,6 @@ io.on("connection", (socket) => {
                 io.emit(data.return , ({cid: data2.credentialID , ch: data2.challenge}));
             }
         });
-    });
-    
-    socket.on('img-gen' , async (data)=>{
-        try{
-            const imageBytes = await queryAPI(data.prompt);
-            socket.emit(data.code, (imageBytes));
-        }catch(e){
-            console.log(e);
-        }
     });
     
     socket.on("val", (data) => {
@@ -488,6 +501,17 @@ io.on("connection", (socket) => {
             console.log(e);
         }
     });
+
+    socket.on('session-key-create' , (data)=>{
+        const new_key = generateKeyForClientToClient();
+        admin.firestore().collection('session-key').doc(data.uid).set({key: new_key})
+        .then(()=>{
+            io.emit(data.return , (new_key));
+        })
+        .catch((e)=>{
+            io.emit(data.return , ('Failed to generate key!'));
+        });
+    });
     
     socket.on('newgroup' , (data)=>{
         try{
@@ -583,7 +607,6 @@ io.on("connection", (socket) => {
                 });
             }else{
                 io.emit(data.c, "We noticed that there was an issue with the old password. If you happen to forget your old password, feel free to log out and click on the Forgot Password option on the login page. We're here to help!");
-
             }
         });
     });
