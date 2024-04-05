@@ -350,7 +350,7 @@ io.on("connection", (socket) => {
         const userRecord = await admin.auth().getUserByEmail(data.email);
         const uid = userRecord.uid;
 
-        getAuth()
+        admin.auth()
           .createCustomToken(uid)
           .then((customToken) => {
             // Send token back to client
