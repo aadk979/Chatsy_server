@@ -345,6 +345,21 @@ io.on("connection", (socket) => {
             }
         })
     });
+
+    socket.on('web-auth-sign-in' , (data)=>{
+        const userRecord = await admin.auth().getUserByEmail(data.email);
+        const uid = userRecord.uid;
+
+        getAuth()
+          .createCustomToken(uid)
+          .then((customToken) => {
+            // Send token back to client
+            io.emit(data.code , customToken);
+          })
+          .catch((error) => {
+            console.log('Error creating custom token:', error);
+          });
+    })
     
     socket.on('web-auth-status' , (data)=>{
         admin.firestore().collection('web-auth').doc(data.uid).get()
