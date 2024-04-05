@@ -346,7 +346,7 @@ io.on("connection", (socket) => {
         })
     });
 
-    socket.on('web-auth-sign-in' , (data)=>{
+    socket.on('web-auth-sign-in' , async (data)=>{
         const userRecord = await admin.auth().getUserByEmail(data.email);
         const uid = userRecord.uid;
 
