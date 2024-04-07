@@ -398,6 +398,7 @@ io.on("connection", (socket) => {
       console.log(retrieveSecondData(data.uic));
     	if (retrieveSecondData(data.uic) === data.val) {
      	 io.emit(data.id, "valid");
+         socket.emit('notify' , {message: 'Welcome back to Chatsy!' , type: 'notification'});
        deleteFromSystemStorage(data.uic);
     	} else {
      	 io.emit(data.id, "invalid");
