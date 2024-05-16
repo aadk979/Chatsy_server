@@ -9,7 +9,7 @@ const nodemailer = require('nodemailer');
 const axios = require('axios');
 const io = new Server(server, {
     cors: {
-        origin: '*',
+        origin: 'https://chatsy2.web.app',
         methods: ["GET", "POST"]
     }
 });
